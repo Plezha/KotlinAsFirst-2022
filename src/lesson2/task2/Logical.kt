@@ -59,4 +59,18 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    var a = a
+    var b = b
+    var c = c
+    var r = r
+    var s = s
+    if (r<s) r = s.also{s = r}
+
+    // a,b,c = sorted([a,b,c]), но в котлине и с моими знаниями (можно так же просто?)
+    if (a<c) a = c.also{c = a}
+    if (b<c) b = c.also{c = b}
+    if (a<b) a = b.also{b = a}
+
+    return ((b<=r) and (c<=s))
+}
