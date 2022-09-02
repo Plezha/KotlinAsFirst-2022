@@ -2,6 +2,7 @@
 
 package lesson3.task1
 
+import kotlin.math.log10
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -192,7 +193,25 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var x = 1
+    var x2 = 1
+    var n = n
+
+    while (n > (log10(x2-.0) + 1).toInt()) {
+        n -= (log10(x2-.0) + 1).toInt()
+        x++
+        x2 = x*x
+    }
+    var s10 = 1
+    var l = (log10(x2-.0) + 1).toInt()
+    for (o_0 in 1..l-n) s10*=10
+    x2 -= x2%s10
+    s10 *= 10
+    x2 %= s10
+    x2 /= s10/10
+    return x2
+}
 
 /**
  * Сложная (5 баллов)
@@ -203,4 +222,21 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var pfn = 0
+    var fn = 1
+    var n = n
+
+    while (n > (log10(fn-.0) + 1).toInt()) {
+        n -= (log10(fn-.0) + 1).toInt()
+        fn = pfn + fn .also{pfn = fn}
+    }
+    var s10 = 1
+    var l = (log10(fn-.0) + 1).toInt()
+    for (o_0 in 1..l-n) s10*=10
+    fn -= fn%s10
+    s10 *= 10
+    fn %= s10
+    fn /= s10/10
+    return fn
+}
