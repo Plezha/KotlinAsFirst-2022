@@ -72,5 +72,6 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     if (b<c) b = c.also{c = b}
     if (a<b) a = b.also{b = a}
 
-    return ((b<=r) and (c<=s))
+
+    return ((b<=r) and (c<=s)) //!
 }
