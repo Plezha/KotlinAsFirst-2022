@@ -203,7 +203,7 @@ fun squareSequenceDigit(n: Int): Int {
         x++
         x2 = x*x
     }
-    var s10 = 1
+    var s10: Long = 1
     var l = (log10(x2-.0) + 1).toInt()
     for (o_0 in 1..l-n) s10*=10
     x2 -= x2%s10
