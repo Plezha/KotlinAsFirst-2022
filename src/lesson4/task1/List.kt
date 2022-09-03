@@ -282,7 +282,7 @@ fun russian(n: Int): String {
     } else {
         val ch = n[l-1].digitToInt()
         val ch2 = n[l-2].digitToInt()
-        ans = "${ if(ch2==0) "" else des[ch2-2]+" " }${ if (ch===0) "" else ed[ch-1] }"
+        ans = "${ if(ch2==0) "" else des[ch2-2]+ if (ch!=0) " " else "" }${ if (ch===0) "" else ed[ch-1] }"
     }
     if (l>2) { //4th digit 19
         val ch = n[l-3].digitToInt()
