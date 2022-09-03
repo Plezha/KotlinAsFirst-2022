@@ -194,8 +194,8 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var x = 1
-    var x2 = 1
+    var x: Long = 1
+    var x2: Long = 1
     var n = n
 
     while (n > (log10(x2-.0) + 1).toInt()) {
@@ -210,7 +210,7 @@ fun squareSequenceDigit(n: Int): Int {
     s10 *= 10
     x2 %= s10
     x2 /= s10/10
-    return x2
+    return x2.toInt()
 }
 
 /**
