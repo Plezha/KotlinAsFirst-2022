@@ -223,20 +223,20 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var pfn = 0
-    var fn = 1
+    var pfn: Long = 0
+    var fn: Long = 1
     var n = n
 
     while (n > (log10(fn-.0) + 1).toInt()) {
         n -= (log10(fn-.0) + 1).toInt()
         fn = pfn + fn .also{pfn = fn}
     }
-    var s10 = 1
+    var s10: Long = 1
     var l = (log10(fn-.0) + 1).toInt()
     for (o_0 in 1..l-n) s10*=10
     fn -= fn%s10
     s10 *= 10
     fn %= s10
     fn /= s10/10
-    return fn
+    return fn.toInt()
 }
