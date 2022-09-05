@@ -137,16 +137,16 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     var b = b
     var c = c
     var d = d //как короче?
-    if (a>c) {
-        a = c.also{c = a}
-        b = d.also{d = b}
+    if (a > c) {
+        a = c.also { c = a }
+        b = d.also { d = b }
     }
-    if (b<=c) {
-        return if (b==c) 0 else -1
-    } else if (b<d) {
-        return b-c
+    return if (b <= c) {
+        if (b == c) 0 else -1
+    } else if (b < d) {
+        b - c
     } else {
-        return d-c
+        d - c
     }
     //!
 }

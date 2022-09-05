@@ -277,7 +277,18 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val s = mutableMapOf<Int, Int>()
+    var ans = Pair(-1, -1)
+
+    for (i in list.indices) s[list[i]] = i
+
+    for (i in list.indices) if ((number - list[i] in s) and (s[number - list[i]] != i)) ans =
+        Pair(s[number - list[i]]!!, i) //а мне нравится
+
+    if (ans.first > ans.second) ans = Pair(ans.second, ans.first)
+    return ans
+}
 
 /**
  * Очень сложная (8 баллов)
@@ -300,7 +311,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String>  = TODO() /*{ //good ol' times
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO() /*{ //как-то странно, что в этой задаче не написаны ограничения
     var s: Set<String>
 
     return s

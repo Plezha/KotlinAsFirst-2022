@@ -65,13 +65,13 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     var c = c
     var r = r
     var s = s
-    if (r<s) r = s.also{s = r}
+    if (r < s) r = s.also { s = r }
 
     // a,b,c = sorted([a,b,c]), но в котлине и с моими знаниями (можно так же просто?)
-    if (a<c) a = c.also{c = a}
-    if (b<c) b = c.also{c = b}
-    if (a<b) a = b.also{b = a}
+    if (a < c) a = c.also { c = a }
+    if (b < c) b = c.also { c = b }
+    if (a < b) a = b.also { b = a }
 
 
-    return ((b<=r) and (c<=s)) //!
+    return (b <= r) and (c <= s)
 }

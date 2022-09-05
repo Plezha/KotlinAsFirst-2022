@@ -248,9 +248,9 @@ fun roman(n: Int): String {
     val l = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     val ll = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000, 2e9.toInt())
 
-    while (n > 0){
+    while (n > 0) {
         var i = 0
-        while (n >= ll[i+1]) i++
+        while (n >= ll[i + 1]) i++
         ans += l[i]
         n -= ll[i]
     }
@@ -266,41 +266,63 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var ans =  ""
+    var ans = ""
     var n = n.toString()
-    var ed = "один два три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать".split(' ')
-    var edt = "одна две три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать".split(' ')
-    var des = "двадцать тридцать сорок пятьдесят шестьдесят семьдесят восемьдесят девяносто".split(' ')
-    var sot = "сто двести триста четыреста пятьсот шестьсот семьсот восемьсот девятьсот".split(' ')
+    val ed =
+        "один два три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать".split(
+            ' '
+        )
+    val edt =
+        "одна две три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать".split(
+            ' '
+        )
+    val des = "двадцать тридцать сорок пятьдесят шестьдесят семьдесят восемьдесят девяносто".split(' ')
+    val sot = "сто двести триста четыреста пятьсот шестьсот семьсот восемьсот девятьсот".split(' ')
     var l = n.length
     //10
-    if ((l==1) or (l==4)) {n = "0$n"; l++}
-
-    if (n[l-2].digitToInt() < 2) { //last 2 digits
-        val ch = n.slice(l-2..l-1).toInt()
-        ans = if (ch==0) "" else ed[ch-1]
-    } else {
-        val ch = n[l-1].digitToInt()
-        val ch2 = n[l-2].digitToInt()
-        ans = "${ if(ch2==0) "" else des[ch2-2]+ if (ch!=0) " " else "" }${ if (ch===0) "" else ed[ch-1] }"
+    if ((l == 1) or (l == 4)) {
+        n = "0$n"; l++
     }
-    if (l>2) { //4th digit 19
-        val ch = n[l-3].digitToInt()
-        ans = "${ if (ch==0) "" else sot[ch-1]+" " }$ans"
+
+    if (n[l - 2].digitToInt() < 2) { //last 2 digits
+        val ch = n.slice(l - 2..l - 1).toInt()
+        ans = if (ch == 0) "" else ed[ch - 1]
+    } else {
+        val ch = n[l - 1].digitToInt()
+        val ch2 = n[l - 2].digitToInt()
+        ans = "${if (ch2 == 0) "" else des[ch2 - 2] + if (ch != 0) " " else ""}${if (ch === 0) "" else ed[ch - 1]}"
+    }
+    if (l > 2) { //4th digit 19
+        val ch = n[l - 3].digitToInt()
+        ans = "${if (ch == 0) "" else sot[ch - 1] + " "}$ans"
     }
     println(n)
-    if (l>3) {
-        if (n[l-5].digitToInt() < 2) { //2nd & 3rd digits
-            val ch = n.slice(l-5..l-4).toInt()
-            ans = "${ if (ch==0) "" else edt[ch-1]+ " " }тысяч${ if (ch==1) "а" else if (ch in listOf(2,3,4)) "и" else "" }${if (ans.length>1) " " else ""}$ans"
+    if (l > 3) {
+        if (n[l - 5].digitToInt() < 2) { //2nd & 3rd digits
+            val ch = n.slice(l - 5..l - 4).toInt()
+            ans = "${if (ch == 0) "" else edt[ch - 1] + " "}тысяч${
+                if (ch == 1) "а" else if (ch in listOf(
+                        2,
+                        3,
+                        4
+                    )
+                ) "и" else ""
+            }${if (ans.length > 1) " " else ""}$ans"
         } else {
-            val ch = n[l-4].digitToInt()
-            val ch2 = n[l-5].digitToInt()
-            ans = "${ if(ch2==0) "" else des[ch2-2]+ " " }${ if (ch==0) "" else edt[ch-1]+" " }тысяч${ if (ch==1) "а" else if (ch in listOf(2,3,4)) "и" else "" }${if (ans.length>1) " " else ""}$ans"
+            val ch = n[l - 4].digitToInt()
+            val ch2 = n[l - 5].digitToInt()
+            ans = "${if (ch2 == 0) "" else des[ch2 - 2] + " "}${if (ch == 0) "" else edt[ch - 1] + " "}тысяч${
+                if (ch == 1) "а" else if (ch in listOf(
+                        2,
+                        3,
+                        4
+                    )
+                ) "и" else ""
+            }${if (ans.length > 1) " " else ""}$ans"
         }
     }
 
-    if (l>5) ans = "${ sot[n[l-6].digitToInt()-1] } $ans"  //1st digit
+    if (l > 5) ans = "${sot[n[l - 6].digitToInt() - 1]} $ans"  //1st digit
 
     return ans
 }

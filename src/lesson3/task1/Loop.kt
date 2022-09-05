@@ -193,24 +193,29 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun getNth(num: Long, n: Int): Int {
+    val n = n
+    var num = num
+    var s10: Long = 1
+    val l = (log10(num - .0) + 1).toInt()
+    for (o_0 in 1..l - n) s10 *= 10 //Pow doesnt work with ints lol
+    num -= num % s10
+    s10 *= 10
+    num %= s10
+    num /= s10 / 10
+    return num.toInt()
+}
 fun squareSequenceDigit(n: Int): Int {
     var x: Long = 1
     var x2: Long = 1
     var n = n
 
-    while (n > (log10(x2-.0) + 1).toInt()) {
-        n -= (log10(x2-.0) + 1).toInt()
+    while (n > (log10(x2 - .0) + 1).toInt()) {
+        n -= (log10(x2 - .0) + 1).toInt()
         x++
-        x2 = x*x
+        x2 = x * x
     }
-    var s10: Long = 1
-    var l = (log10(x2-.0) + 1).toInt()
-    for (o_0 in 1..l-n) s10*=10 //Pow doesnt work with ints lol
-    x2 -= x2%s10
-    s10 *= 10
-    x2 %= s10
-    x2 /= s10/10
-    return x2.toInt()
+    return getNth(x2, n)
 }
 
 /**
@@ -227,16 +232,9 @@ fun fibSequenceDigit(n: Int): Int {
     var fn: Long = 1
     var n = n
 
-    while (n > (log10(fn-.0) + 1).toInt()) {
-        n -= (log10(fn-.0) + 1).toInt()
-        fn = pfn + fn .also{pfn = fn}
+    while (n > (log10(fn - .0) + 1).toInt()) {
+        n -= (log10(fn - .0) + 1).toInt()
+        fn = pfn + fn.also { pfn = fn }
     }
-    var s10: Long = 1
-    var l = (log10(fn-.0) + 1).toInt()
-    for (o_0 in 1..l-n) s10*=10
-    fn -= fn%s10
-    s10 *= 10
-    fn %= s10
-    fn /= s10/10
-    return fn.toInt()
+    return getNth(fn, n)
 }
