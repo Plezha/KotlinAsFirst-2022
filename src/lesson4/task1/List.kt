@@ -294,7 +294,7 @@ fun russian(n: Int): String {
     }
     if (l > 2) { //4th digit 19
         val ch = n[l - 3].digitToInt()
-        ans = "${if (ch == 0) "" else sot[ch - 1] + " "}$ans"
+        ans = "${if (ch == 0) "" else sot[ch - 1] + if (ans.isEmpty()) "" else " "}$ans"
     }
     println(n)
     if (l > 3) {
@@ -312,7 +312,7 @@ fun russian(n: Int): String {
             val ch = n[l - 4].digitToInt()
             val ch2 = n[l - 5].digitToInt()
             ans = "${if (ch2 == 0) "" else des[ch2 - 2] + " "}${if (ch == 0) "" else edt[ch - 1] + " "}тысяч${
-                if (ch == 1) "а" else if (ch in listOf(
+                if (ch == 1) "а" else if (ch in setOf(
                         2,
                         3,
                         4
