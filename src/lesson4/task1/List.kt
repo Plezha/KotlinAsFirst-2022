@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import ru.spbstu.wheels.Inf
+import java.lang.StringBuilder
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -243,19 +244,19 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var ans = ""
+    var ans = StringBuilder()
     var n = n
     val l = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
-    val ll = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000, 2e9.toInt())
+    val ll = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000, Int.MAX_VALUE)
 
     while (n > 0) {
         var i = 0
         while (n >= ll[i + 1]) i++
-        ans += l[i]
+        ans.append(l[i])
         n -= ll[i]
     }
 
-    return ans
+    return ans.toString()
 }
 
 /**
