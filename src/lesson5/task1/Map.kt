@@ -292,7 +292,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     return ans
 }
 
-
 /**
  * Очень сложная (8 баллов)
  *
@@ -315,28 +314,46 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> { //ограничения???
-    var s: Set<String> = setOf("a")
+    var s: MutableSet<String> = mutableSetOf()
     val n = treasures.size
-    val dp = MutableList(n) { MutableList(capacity) { -1 } }
-    val dp1 = MutableList(n) { MutableList(capacity) { capacity } }
+    val dp = MutableList(n + 1) { MutableList(capacity + 1) { -1 } }
     val kv = treasures.values.toList()
+    val names = treasures.keys.toList()
 
-    for (i in 0 until n) {
-        for (j in 0 until capacity) {
+    for (i in 0..n-1) print("${kv[i]} ")
+    println()
+    for (i in 0..n-1) print("${names[i]} ")
+    println()
 
-            if (i*j==0) dp[i][j]=0
-            else if (kv[i - 1].first <= j) {
-                dp[i][j] = max(kv[i - 1].second + dp[i - 1][j - kv[i - 1].first], dp[i - 1][j])
+    for (i in 0..n) {
+        for (j in 0..capacity) {
+            if (i * j == 0) dp[i][j] = 0
+            else if (j >= kv[i - 1].first) {
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - kv[i - 1].first] + kv[i - 1].second)
             } else dp[i][j] = dp[i - 1][j]
         }
     }
 
-    for (i in 0 until n) {
-        for (j in 0 until capacity) {
+    for (i in 0..n) {
+        for (j in 0..capacity) {
             print(dp[i][j])
+            print(' ')
         }
         println()
     }
 
-    return s //pge
+    var i = n
+    var j = capacity
+    while ((i != 0) && (j != 0)) {
+        print("$i $j\n")
+        println(s)
+        if (dp[i][j] == dp[i - 1][j]) {
+            i--
+        } else if (dp[i][j] == dp[i - 1][j - kv[i - 1].first] + kv[i - 1].second) {
+            s.add(names[i-1])
+            i--
+            j -= kv[i].first
+        }
+    }
+    return s
 }
