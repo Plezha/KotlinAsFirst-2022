@@ -198,7 +198,7 @@ fun getNth(num: Long, n: Int): Int {
     var num = num
     var s10: Long = 1
     val l = (log10(num - .0) + 1).toInt()
-    for (o_0 in 1..l - n) s10 *= 10 //Pow doesnt work with ints lol
+    for (uselessPieceOfShitButInCamelCase in 1..l - n) s10 *= 10 //Pow doesnt work with ints lol
     num -= num % s10
     s10 *= 10
     num %= s10
