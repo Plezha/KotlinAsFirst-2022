@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.lang.Integer.max
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -290,6 +292,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     return ans
 }
 
+
 /**
  * Очень сложная (8 баллов)
  *
@@ -311,9 +314,29 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO() /*{ //как-то странно, что в этой задаче не написаны ограничения
-    var s: Set<String>
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> { //ограничения???
+    var s: Set<String> = setOf("a")
+    val n = treasures.size
+    val dp = MutableList(n) { MutableList(capacity) { -1 } }
+    val dp1 = MutableList(n) { MutableList(capacity) { capacity } }
+    val kv = treasures.values.toList()
+
+    for (i in 0 until n) {
+        for (j in 0 until capacity) {
+
+            if (i*j==0) dp[i][j]=0
+            else if (kv[i - 1].first <= j) {
+                dp[i][j] = max(kv[i - 1].second + dp[i - 1][j - kv[i - 1].first], dp[i - 1][j])
+            } else dp[i][j] = dp[i - 1][j]
+        }
+    }
+
+    for (i in 0 until n) {
+        for (j in 0 until capacity) {
+            print(dp[i][j])
+        }
+        println()
+    }
 
     return s
 }
-*/
