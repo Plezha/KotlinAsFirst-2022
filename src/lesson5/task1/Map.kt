@@ -320,10 +320,10 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val kv = treasures.values.toList()
     val names = treasures.keys.toList()
 
-    for (i in 0..n-1) print("${kv[i]} ")
+    /*for (i in 0..n-1) print("${kv[i]} ")
     println()
     for (i in 0..n-1) print("${names[i]} ")
-    println()
+    println()*/
 
     for (i in 0..n) {
         for (j in 0..capacity) {
@@ -334,19 +334,19 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
     }
 
-    for (i in 0..n) {
+    /*for (i in 0..n) {
         for (j in 0..capacity) {
             print(dp[i][j])
             print(' ')
         }
         println()
-    }
+    }*/
 
     var i = n
     var j = capacity
     while ((i != 0) && (j != 0)) {
-        print("$i $j\n")
-        println(s)
+        /*print("$i $j\n")
+        println(s)*/
         if (dp[i][j] == dp[i - 1][j]) {
             i--
         } else if (dp[i][j] == dp[i - 1][j - kv[i - 1].first] + kv[i - 1].second) {
