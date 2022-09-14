@@ -290,6 +290,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var c = reader.read().toChar()
     var cnt = 0
     var ans = ""
+    var f = 0
+
     fun MutableList<String>.doThing(what: String) {
         val what = when (what) {
             "*" -> "i"
@@ -298,15 +300,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             "\n" -> "p"
             else -> what
         }
-
-        if ((this.size > 0) && (this.last() == what)) {
-            this.removeLast()
-            writer.write("</$what>")
-            ans += "</$what>"
-        } else {
-            this += what
-            writer.write("<$what>")
-            ans += "<$what>"
+        if (!((what == "p") && (f == 1))) {
+            if ((this.size > 0) && (this.last() == what)) {
+                this.removeLast()
+                writer.write("</$what>")
+                ans += "</$what>"
+                f = if (what == "p") 1 else 0
+            } else {
+                this += what
+                writer.write("<$what>")
+                ans += "<$what>"
+            }
         }
     }
     st.doThing("html")
