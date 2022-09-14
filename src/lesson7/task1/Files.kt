@@ -331,7 +331,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 prc = c
                 c = nc
             } else if (c == '\n' && nc == '\n') {
-                println(100)
                 st.doThing("\n")
                 st.doThing("\n")
                 prc = nc
@@ -346,6 +345,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     st.doThing("body")
     st.doThing("html")
     writer.close()
+    if (st.size > 0) throw Exception("St is not empty: $st")
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
