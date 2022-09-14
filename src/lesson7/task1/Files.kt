@@ -305,11 +305,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 this.removeLast()
                 writer.write("</$what>")
                 ans += "</$what>"
-                f = if (what == "p") 1 else 0
             } else {
                 this += what
                 writer.write("<$what>")
                 ans += "<$what>"
+                f = if (what == "p") 1 else 0
             }
         }
     }
@@ -343,6 +343,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 c = reader.read().toChar()
             }
         } else {
+            f = 0
             writer.write(c.toString()) // Я правильно понял, что внутрь write() можно Int, но нельзя Char?
             ans += c
             c = nc
