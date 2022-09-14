@@ -289,7 +289,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var prc = '\n'
     var c = reader.read().toChar()
     var cnt = 0
-
+    var ans = ""
     fun MutableList<String>.doThing(what: String) {
         val what = when (what) {
             "*" -> "i"
@@ -302,9 +302,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if ((this.size > 0) && (this.last() == what)) {
             this.removeLast()
             writer.write("</$what>")
+            ans += "</$what>"
         } else {
             this += what
             writer.write("<$what>")
+            ans += "<$what>"
         }
     }
     st.doThing("html")
@@ -338,6 +340,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         } else {
             writer.write(c.toString()) // Я правильно понял, что внутрь write() можно Int, но нельзя Char?
+            ans += c
             c = nc
         }
     }
@@ -345,7 +348,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     st.doThing("body")
     st.doThing("html")
     writer.close()
-    if (st.size > 0) throw Exception("St is not empty: $st")
+    if (st.size > 0) throw Exception("$ans \n St is not empty: $st") //Предположим, что это - лог
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
