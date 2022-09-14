@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.io.FileInputStream
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -279,10 +280,77 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
     </body>
 </html>
  *
- * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
+ * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать необязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val st = mutableListOf<String>()
+    val writer = File(outputName).bufferedWriter()
+    val reader = File(inputName).bufferedReader()
+    var prc = '\n'
+    var c = reader.read().toChar()
+    var cnt = 0
+
+    fun MutableList<String>.doThing(what: String) {
+        val what = when (what) {
+            "*" -> "i"
+            "**" -> "b"
+            "~~" -> "s"
+            "\n" -> "p"
+            else -> what
+        }
+
+        if ((this.size > 0) && (this.last() == what)) {
+            this.removeLast()
+            writer.write("</$what>")
+        } else {
+            this += what
+            writer.write("<$what>")
+        }
+    }
+    st.doThing("html")
+    st.doThing("body")
+    st.doThing("p")
+    while (true) {
+        cnt++
+        //print(c)
+        var nc = reader.read().toChar()
+        while (nc == ' ' || nc == 13.toChar()) nc = reader.read().toChar() //возврат каретки, ага, спасибо
+        if (c == '￿' || nc == '￿' || cnt > 5000) break // как-то костыльно
+        //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
+        if (c in "*~" || (c == '\n' && nc == '\n')) {
+            if (c == '*' && nc == '*') {
+                st.doThing("**")
+                prc = nc
+                c = reader.read().toChar()
+            } else if (c == '~' && nc == '~') {
+                st.doThing("~~")
+                prc = nc
+                c = reader.read().toChar()
+            } else if (c == '*') {
+                st.doThing("*")
+                prc = c
+                c = nc
+            } else if (c == '\n' && nc == '\n') {
+                println(100)
+                st.doThing("\n")
+                st.doThing("\n")
+                prc = nc
+                c = reader.read().toChar()
+            }
+        } else {
+            writer.write(c.toString()) // Я правильно понял, что внутрь write() можно Int, но нельзя Char?
+            c = nc
+        }
+    }
+    st.doThing("p")
+    st.doThing("body")
+    st.doThing("html")
+    writer.close()
+    /*File(outputName).bufferedReader().use {
+        File(inputName).bufferedWriter().use {
+
+        }
+    }*/ //А как оно должно работать????
 }
 
 /**
