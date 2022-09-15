@@ -320,7 +320,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         cnt++
         //print(c)
         var nc = reader.read().toChar()
-        while (nc == 13.toChar()) nc = reader.read().toChar() //возврат каретки, ага, спасибо
+        while (nc == 13.toChar() || nc == '\t') nc = reader.read().toChar() //возврат каретки, ага, спасибо
         if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
         if (c in "*~" || (c == '\n' && nc == '\n')) {
