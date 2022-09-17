@@ -321,7 +321,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         cnt++
         //print(c)
         var nc = reader.read().toChar()
-        while (cnt >= 1e7 || nc == 13.toChar() || nc == '\t' || (f == 1 && nc == '\n')) nc = reader.read().toChar() //каретка или таб или перенос строки в только открытом параграфе
+        while (cnt >= 1e7 || nc == 13.toChar()  || (f == 1 && (nc == '\n' || nc == '\t'))) nc = reader.read().toChar() //каретка или (таб или перенос строки) в только что открытом параграфе
         if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
         if (c in "*~" || (c == '\n' && nc == '\n')) {
@@ -355,7 +355,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     st.doThing("html")
     writer.close()
 
-    if (st.size > 0) throw Exception("cnt = $cnt \n ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/} \n St is not empty: $st") //Предположим, что это - лог
+    if (st.size > 0) throw Exception("cnt = $cnt     ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/}     St is not empty: $st") //Предположим, что это - лог
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
