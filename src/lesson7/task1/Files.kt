@@ -321,7 +321,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         cnt++
         //print(c)
         var nc = reader.read().toChar()
-        while (cnt >= 1e7 || nc == 13.toChar()  || (f == 1 && (nc == '\n' || nc == '\t'))) nc = reader.read().toChar() //каретка или (таб или перенос строки) в только что открытом параграфе
+        while (cnt >= 1e6 || nc == 13.toChar()  || (f == 1 && (nc == '\n' || nc == '\t'))) nc = reader.read().toChar() //каретка или (таб или перенос строки) в только что открытом параграфе
         if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
         if (c in "*~" || (c == '\n' && nc == '\n')) {
