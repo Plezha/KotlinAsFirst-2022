@@ -312,18 +312,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     st.doThing("html")
     st.doThing("body")
     writer.write("<p>")
-    while (cnt < 10000000) {
+    while (cnt < 10000000 && c != '￿') { // как-то костыльно
         cnt++
         //print(c)
         var nc = reader.read().toChar()
         while (nc == 13.toChar()) nc = reader.read().toChar() // каретка
-        if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
 
         if (nc == '\n') {
             //reader.mark(1000000) // Как это работает? что значит вписанное число? (строку не использовал, но всё равно интересно)
             while (nc in "\t ${13.toChar()}") {
-                c = nc
+                if (nc=='\n') c = nc
                 nc = reader.read().toChar()
             }
             if (c == '\n' && nc == '\n') {
