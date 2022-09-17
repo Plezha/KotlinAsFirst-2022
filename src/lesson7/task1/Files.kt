@@ -355,7 +355,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     st.doThing("html")
     writer.close()
 
-    if (st.size > 0) throw Exception("cnt = $cnt \n ans = ${ans.slice( (ans.length-50)..(ans.length-1))} \n St is not empty: $st") //Предположим, что это - лог
+    if (st.size > 0) throw Exception("cnt = $cnt \n ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/} \n St is not empty: $st") //Предположим, что это - лог
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
