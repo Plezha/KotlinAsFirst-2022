@@ -281,7 +281,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать необязательно)
  */
-fun markdownToHtmlSimple(inputName: String, outputName: String) {
+fun markdownToHtmlSimple(inputName: String, outputName: String) { // А зачем стек?
     val st = mutableListOf<String>()
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
@@ -311,24 +311,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
     st.doThing("html")
     st.doThing("body")
-    st.doThing("p")
+    writer.write("<p>")
     while (true) {
         cnt++
         //print(c)
         var nc = reader.read().toChar()
-        while (cnt >= 1e6 || nc == 13.toChar()) nc = reader.read().toChar() //каретка
+        while (cnt >= 1e6 || nc == 13.toChar()) nc = reader.read().toChar() // каретка
         if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
 
         if (nc == '\n') {
-            reader.mark(1000000) //как это работает? что значит вписанное число?
+            //reader.mark(1000000) // Как это работает? что значит вписанное число? (строку не использовал, но всё равно интересно)
             while (nc in "\t ${13.toChar()}") {
                 c = nc
                 nc = reader.read().toChar()
             }
             if (c == '\n' && nc == '\n') {
-                st.doThing("\n")
-                st.doThing("\n")
+                writer.write("</p>")
+                writer.write("<p>")
                 while (nc in "\n ${13.toChar()}") {
                     c = nc
                     nc = reader.read().toChar()
@@ -353,7 +353,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             c = nc
         }
     }
-    st.doThing("p")
+    writer.write("</p>")
     st.doThing("body")
     st.doThing("html")
     writer.close()
