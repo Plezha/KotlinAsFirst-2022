@@ -312,11 +312,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     st.doThing("html")
     st.doThing("body")
     writer.write("<p>")
-    while (true) {
+    while (cnt < 10000000) {
         cnt++
         //print(c)
         var nc = reader.read().toChar()
-        while (cnt >= 1e6 || nc == 13.toChar()) nc = reader.read().toChar() // каретка
+        while (nc == 13.toChar()) nc = reader.read().toChar() // каретка
         if (c == '￿') break // как-то костыльно
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
 
