@@ -299,38 +299,43 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
             else -> what
         }
         if ((this.size > 0) && (this.last() == what)) {
-                this.removeLast()
-                writer.write("</$what>")
-                ans += "</$what>"
+            this.removeLast()
+            writer.write("</$what>")
+            ans += "</$what>"
 
         } else {
-                this += what
-                writer.write("<$what>")
-                ans += "<$what>"
+            this += what
+            writer.write("<$what>")
+            ans += "<$what>"
         }
     }
     st.doThing("html")
     st.doThing("body")
     writer.write("<p>")
-    while (cnt < 10000000 && c != '￿') { // как-то костыльно
+    while (cnt < 10000000 && c.code != 65535) { // как-то костыльно
         cnt++
         //print(c)
+        reader.mark(100)
         var nc = reader.read().toChar()
         while (nc == 13.toChar()) nc = reader.read().toChar() // каретка
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
 
         if (nc == '\n') {
-            //reader.mark(1000000) // Как это работает? что значит вписанное число? (строку не использовал, но всё равно интересно)
-            while (nc in "\t ${13.toChar()}") {
-                if (nc=='\n') c = nc
+            while (nc in "\n\t ${13.toChar()}") nc = reader.read().toChar()
+            reader.reset()
+            if (nc.code != 65535) {
                 nc = reader.read().toChar()
-            }
-            if (c == '\n' && nc == '\n') {
-                writer.write("</p>")
-                writer.write("<p>")
-                while (nc in "\n ${13.toChar()}") {
-                    c = nc
+                while (nc in "\t ${13.toChar()}") {
+                    if (nc == '\n') c = nc
                     nc = reader.read().toChar()
+                }
+                if (c == '\n' && nc == '\n') {
+                    writer.write("</p>")
+                    writer.write("<p>")
+                    while (nc in "\n ${13.toChar()}") {
+                        c = nc
+                        nc = reader.read().toChar()
+                    }
                 }
             }
         }
@@ -531,4 +536,3 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
-
