@@ -282,89 +282,65 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать необязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) { // А зачем стек?
-    val st = mutableListOf<String>()
+    val d = mutableMapOf('b' to false, 'i' to false, 's' to false)
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
-    var prc = '\n'
-    var c = reader.read().toChar()
+    var nc = ' '
     var cnt = 0
     var ans = ""
+    var f = false
+    writer.write("<html><body><p>")
 
-    fun MutableList<String>.doThing(what: String) {
-        val what = when (what) {
-            "*" -> "i"
-            "**" -> "b"
-            "~~" -> "s"
-            "\n" -> "p"
-            else -> what
-        }
-        if ((this.size > 0) && (this.last() == what)) {
-            this.removeLast()
-            writer.write("</$what>")
-            ans += "</$what>"
-
-        } else {
-            this += what
-            writer.write("<$what>")
-            ans += "<$what>"
-        }
-    }
-    st.doThing("html")
-    st.doThing("body")
-    writer.write("<p>")
-    while (cnt < 10000000 && c.code != 65535) { // как-то костыльно
+    while (nc.code != 65535 && cnt < 1000000) {
         cnt++
-        //print(c)
         reader.mark(100)
-        var nc = reader.read().toChar()
-        //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
+        nc = reader.read().toChar()
 
         if (nc == '\n') {
-            while (nc in "\n\t ${13.toChar()}") nc = reader.read().toChar()
+            var cnt2 = 0
+            var cnt3 = 0
+            while (nc in "\n\t ${13.toChar()}") {
+                if (nc == '\n') cnt3 = cnt2
+                nc = reader.read().toChar()
+                cnt2 += 1
+            }
             reader.reset()
-            if (nc.code != 65535) {
-                while (nc != '\n') nc = reader.read().toChar()
+            f = (nc.code != 65535) && (cnt3 > 0)
 
-                while (nc in "\n\t ${13.toChar()}") {
-                    nc = reader.read().toChar()
-                    //println(nc.code)
-                    if (nc == '\n') {
-                        writer.write("</p>")
-                        writer.write("<p>")
-                        while (nc in "\n ${13.toChar()}") {
-                            c = nc
-                            nc = reader.read().toChar()
-                        }
-                        break
-                    }
-                }
-                println()
+            if (f) writer.write("</p>")
+            reader.read() // skip '/n'
+            while (cnt3 > 1) {
+                cnt3--
+                writer.write(reader.read().toChar().toString())
             }
-        }
-        //
-        if (c in "*~") {
-            if (c == '*' && nc == '*') {
-                st.doThing("**")
-                c = reader.read().toChar()
-            } else if (c == '~' && nc == '~') {
-                st.doThing("~~")
-                c = reader.read().toChar()
-            } else if (c == '*') {
-                st.doThing("*")
-                c = nc
+            if (f) writer.write("<p>")
+            if (f) reader.read() // skip '\n'
+
+        } else if (nc == '~') {
+            nc = reader.read().toChar()
+            if (nc == '~') {
+                writer.write("<${ if (d['s']!!) '/' else ' ' }s>")
+                d['s'] = !d['s']!!
+            } else writer.write(nc.toString())
+
+        } else if (nc == '*') {
+            nc = reader.read().toChar()
+            if (nc == '*') {
+                writer.write("<${ if (d['b']!!) '/' else ' ' }b>")
+                d['b'] = !d['b']!!
+            } else {
+                writer.write("<${ if (d['i']!!) '/' else ' ' }i>")
+                d['i'] = !d['i']!!
+                reader.reset(); reader.read()
             }
-        } else {
-            writer.write(c.toString()) // Я правильно понял, что внутрь write() можно Int, но нельзя Char?
-            ans += c
-            c = nc
-        }
+        } else if (nc.code != 65535) writer.write(nc.toString())
+
+
     }
-    writer.write("</p>")
-    st.doThing("body")
-    st.doThing("html")
+    writer.write("</p></body></html>")
     writer.close()
 
-    if (st.size > 0) throw Exception("cnt = $cnt     ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/}     St is not empty: $st") //Предположим, что это - лог
+    //if (st.size > 0) throw Exception("cnt = $cnt     ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/}     St is not empty: $st") //Предположим, что это - лог
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
