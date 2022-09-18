@@ -317,26 +317,28 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
         //print(c)
         reader.mark(100)
         var nc = reader.read().toChar()
-        while (nc == 13.toChar()) nc = reader.read().toChar() // каретка
         //print("${c.code} ${nc.code} ${c == '\n'} ${nc == '\n'}\n")
 
         if (nc == '\n') {
             while (nc in "\n\t ${13.toChar()}") nc = reader.read().toChar()
             reader.reset()
             if (nc.code != 65535) {
-                nc = reader.read().toChar()
-                while (nc in "\t ${13.toChar()}") {
-                    if (nc == '\n') c = nc
+                while (nc != '\n') nc = reader.read().toChar()
+
+                while (nc in "\n\t ${13.toChar()}") {
                     nc = reader.read().toChar()
-                }
-                if (c == '\n' && nc == '\n') {
-                    writer.write("</p>")
-                    writer.write("<p>")
-                    while (nc in "\n ${13.toChar()}") {
-                        c = nc
-                        nc = reader.read().toChar()
+                    //println(nc.code)
+                    if (nc == '\n') {
+                        writer.write("</p>")
+                        writer.write("<p>")
+                        while (nc in "\n ${13.toChar()}") {
+                            c = nc
+                            nc = reader.read().toChar()
+                        }
+                        break
                     }
                 }
+                println()
             }
         }
 
