@@ -341,7 +341,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
                 println()
             }
         }
-
+        //
         if (c in "*~") {
             if (c == '*' && nc == '*') {
                 st.doThing("**")
