@@ -285,10 +285,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     val d = mutableMapOf('b' to false, 'i' to false, 's' to false)
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
-    var nc = ' '
+    var nc = '\n'
     var cnt = 0
     var ans = ""
     var f = false
+    while (nc in "\n\t ${13.toChar()}") {
+        reader.mark(1)
+        nc = reader.read().toChar()
+        if (nc in "\n\t ${13.toChar()}") writer.write(nc.toString())
+    }
+    reader.reset()
     writer.write("<html><body><p>")
 
     while (nc.code != 65535 && cnt < 1000000) {
