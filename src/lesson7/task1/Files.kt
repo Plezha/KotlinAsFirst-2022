@@ -287,7 +287,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var cnt = 0
-    var ans = ""
     var f = false
     while (nc in "\n\t ${13.toChar()}") {
         reader.mark(1)
@@ -315,7 +314,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
 
             if (f) writer.write("</p>")
             reader.read() // skip '/n'
-            while (cnt3 > 1) {
+            while (cnt3 > 1) { // Возможно, если символ начала параграфа in "\t {13.toChar()}", тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
                 cnt3--
                 writer.write(reader.read().toChar().toString())
             }
@@ -346,7 +345,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     writer.write("</p></body></html>")
     writer.close()
 
-    //if (st.size > 0) throw Exception("cnt = $cnt     ans = ${ans /*.slice( (ans.length-50)..(ans.length-1))*/}     St is not empty: $st") //Предположим, что это - лог
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
 
@@ -388,21 +386,21 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
- * Утка по-пекински
- * Утка
- * Соус
- * Салат Оливье
-1. Мясо
- * Или колбаса
-2. Майонез
-3. Картофель
-4. Что-то там ещё
- * Помидоры
- * Фрукты
-1. Бананы
-23. Яблоки
-1. Красные
-2. Зелёные
+* Утка по-пекински
+    * Утка
+    * Соус
+* Салат Оливье
+    1. Мясо
+        * Или колбаса
+    2. Майонез
+    3. Картофель
+    4. Что-то там ещё
+* Помидоры
+* Фрукты
+    1. Бананы
+    23. Яблоки
+        1. Красные
+        2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
@@ -452,7 +450,29 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val st = mutableMapOf('b' to false, 'i' to false, 's' to false)
+    val writer = File(outputName).bufferedWriter()
+    val reader = File(inputName).bufferedReader()
+    var nc = '\n'
+    var cnt = 0
+    var ans = ""
+    var f = false
+    while (nc in "\n\t ${13.toChar()}") {
+        reader.mark(1)
+        nc = reader.read().toChar()
+        if (nc in "\n\t ${13.toChar()}") writer.write(nc.toString())
+    }
+    reader.reset()
+    writer.write("<html><body><p>")
+
+    while (nc.code != 65535 && cnt < 1000000) {
+        cnt++
+        reader.mark(100)
+        nc = reader.read().toChar()
+
+    }
+    writer.write("</p></body></html>")
+    writer.close()
 }
 
 /**
