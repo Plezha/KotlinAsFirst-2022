@@ -450,27 +450,53 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    val st = mutableMapOf('b' to false, 'i' to false, 's' to false)
+    val st = mutableListOf<Pair<Int, String>>() // Is deque better?
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var cnt = 0
-    var ans = ""
-    var f = false
-    while (nc in "\n\t ${13.toChar()}") {
-        reader.mark(1)
-        nc = reader.read().toChar()
-        if (nc in "\n\t ${13.toChar()}") writer.write(nc.toString())
-    }
-    reader.reset()
-    writer.write("<html><body><p>")
+    writer.write("<p><body><html>")
 
-    while (nc.code != 65535 && cnt < 1000000) {
-        cnt++
-        reader.mark(100)
+    fun MutableList<Pair<Int, String>>.add2(what: Pair<Int, String>){
+        this.add(what)
+        writer.write("<${what.second}>")
+    }
+
+    fun MutableList<Pair<Int, String>>.removeLast2(){
+        val what = this.removeLast()
+        writer.write("</${what.second}>")
+    }
+
+    while (nc.code != 65535) { // nc == '\n'
         nc = reader.read().toChar()
+        var isOl = false
+
+        var indentation = 0
+        while (nc == ' ') {
+            indentation++
+            nc = reader.read().toChar()
+        }
+
+        while (nc.isDigit()) {
+            nc = reader.read().toChar()
+        }
+        if (nc in ".*") {
+            isOl = nc == '.'
+            nc = reader.read().toChar()
+        } // nc == ' '
+
+        if (st.isEmpty()) {
+            st.add2((indentation to "ol"))
+        } else if (true) {
+
+        }
+
+
+
+
 
     }
+
     writer.write("</p></body></html>")
     writer.close()
 }
