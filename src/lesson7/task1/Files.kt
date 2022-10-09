@@ -340,7 +340,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
             }
         } else if (nc.code != 65535) writer.write(nc.toString())
 
-
     }
     writer.write("</p></body></html>")
     writer.close()
@@ -455,20 +454,48 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var cnt = 0
-    writer.write("<p><body><html>")
+    writer.write("<html><body><p>")
+    print("<html><body><p>")
+
+    fun writeLn() {
+        while (nc != '\n' && nc.code != 65535) {
+            writer.write(nc.toString())
+            print(nc.toString())
+            nc = reader.read().toChar()
+        }
+    }
 
     fun MutableList<Pair<Int, String>>.add2(what: Pair<Int, String>){
         this.add(what)
         writer.write("<${what.second}>")
+        print("<${what.second}>")
     }
 
     fun MutableList<Pair<Int, String>>.removeLast2(){
         val what = this.removeLast()
         writer.write("</${what.second}>")
+        print("</${what.second}>")
     }
 
     while (nc.code != 65535) { // nc == '\n'
+        reader.mark(1000)
         nc = reader.read().toChar()
+        while (nc in "\t ${13.toChar()}") nc = reader.read().toChar()
+        if (nc == '\n' || nc.code == 65535) continue
+
+        reader.reset()
+        nc = reader.read().toChar()
+        print('>')
+        while (nc != '\n' && nc.code != 65535) {
+            print(nc)
+            nc = reader.read().toChar()
+        }
+        println()
+        println()
+
+        reader.reset()
+        nc = reader.read().toChar()
+
         var isOl = false
 
         var indentation = 0
@@ -486,18 +513,39 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
         } // nc == ' '
 
         if (st.isEmpty()) {
-            st.add2((indentation to "ol"))
-        } else if (true) {
+            st.add2(indentation to if (isOl) "ol" else "ul")
+            st.add2(indentation to "li")
+            writeLn()
+        } else if (indentation > st.last().first) {
+            st.add2(indentation to if (isOl) "ol" else "ul")
+            st.add2(indentation to "li")
+            writeLn()
+        } else if (indentation < st.last().first) {
+            while (indentation != st.last().first) st.removeLast2()
+            st.removeLast2() // close <li>
 
+            if (st.last().second != if (isOl) "ol" else "ul") {
+                st.removeLast2()
+                st.add2(indentation to if (isOl) "ol" else "ul")
+            }
+            st.add2(indentation to "li")
+            writeLn()
+        } else if (indentation == st.last().first) {
+            st.removeLast2() // close <li>
+
+            if (st.last().second != if (isOl) "ol" else "ul") {
+                st.removeLast2()
+                st.add2(indentation to if (isOl) "ol" else "ul")
+            }
+            st.add2(indentation to "li")
+            writeLn()
         }
 
-
-
-
-
     }
+    while (st.isNotEmpty()) st.removeLast2()
 
     writer.write("</p></body></html>")
+    print("</p></body></html>")
     writer.close()
 }
 

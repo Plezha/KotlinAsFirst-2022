@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import ru.spbstu.wheels.sorted
 import java.lang.Integer.max
 
 // Урок 5: ассоциативные массивы и множества
@@ -287,7 +288,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 
     for (i in list.indices) if ((number - list[i] in m) && (m[number - list[i]] != i)) ans = m[number - list[i]]!! to i //а мне нравится
 
-    return if (ans.first > ans.second) ans.second to ans.first else ans
+    return ans.sorted()
 }
 
 /**
@@ -312,45 +313,26 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> { //ограничения???
-    var s: MutableSet<String> = mutableSetOf()
-    val n = treasures.size
-    val dp = MutableList(n + 1) { MutableList(capacity + 1) { -1 } }
+    val s: MutableSet<String> = mutableSetOf()
+    var n = treasures.size
+    val dp = MutableList(n + 1) { MutableList(capacity + 1) { 0 } }
     val kv = treasures.values.toList()
     val names = treasures.keys.toList()
 
-    /*for (i in 0..n-1) print("${kv[i]} ")
-    println()
-    for (i in 0..n-1) print("${names[i]} ")
-    println()*/
-
-    for (i in 0..n) {
-        for (j in 0..capacity) {
-            if (i * j == 0) dp[i][j] = 0
-            else if (j >= kv[i - 1].first) {
+    for (i in 1..n) {
+        for (j in 1..capacity) {
+            if (j >= kv[i - 1].first) {
                 dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - kv[i - 1].first] + kv[i - 1].second)
             } else dp[i][j] = dp[i - 1][j]
         }
     }
 
-    /*for (i in 0..n) {
-        for (j in 0..capacity) {
-            print(dp[i][j])
-            print(' ')
-        }
-        println()
-    }*/
-
-    var i = n
     var j = capacity
-    while ((i != 0) && (j != 0)) {
-        /*print("$i $j\n")
-        println(s)*/
-        if (dp[i][j] == dp[i - 1][j]) {
-            i--
-        } else if (dp[i][j] == dp[i - 1][j - kv[i - 1].first] + kv[i - 1].second) {
-            s.add(names[i-1])
-            i--
-            j -= kv[i].first
+    while (n != 0) {
+        n--
+        if (dp[n + 1][j] != dp[n][j]) {
+            s.add(names[n])
+            j -= kv[n].first
         }
     }
     return s

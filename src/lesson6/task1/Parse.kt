@@ -138,8 +138,32 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    var ans = 0
+    var zn = true
+    var i = 0
+    while (i < expression.length) {
+            var n = ""
+            while (i < expression.length && expression[i].isDigit()) {
+                n += expression[i]
+                i++
+            }
+            ans += if (zn) n.toInt() else -n.toInt()
+            if (i == expression.length) break
 
+            if (expression[i] == ' ') i++
+            else throw IllegalArgumentException()
+
+            if (expression[i] in "+-") {
+                zn = expression[i] == '+'
+            } else throw IllegalArgumentException()
+
+            i++
+            if (expression[i] == ' ') i++
+            else throw IllegalArgumentException()
+        }
+        return (ans)
+}
 /**
  * Сложная (6 баллов)
  *
