@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import kotlin.math.exp
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -139,6 +141,7 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
+    if (expression.isEmpty()) throw IllegalArgumentException()
     var ans = 0
     var zn = true
     var i = 0
