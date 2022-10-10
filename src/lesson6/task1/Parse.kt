@@ -2,8 +2,6 @@
 
 package lesson6.task1
 
-import kotlin.math.exp
-
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -141,31 +139,21 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    if (expression.isEmpty()) throw IllegalArgumentException()
+    if (!expression.matches(Regex("""([0-9]+ [+-] )*[0-9]+""")) || expression.isEmpty()) throw IllegalArgumentException()
+    var znIs = true
+    var zn = false
     var ans = 0
-    var zn = true
-    var i = 0
-    while (i < expression.length) {
-            var n = ""
-            while (i < expression.length && expression[i].isDigit()) {
-                n += expression[i]
-                i++
-            }
-            ans += if (zn) n.toInt() else -n.toInt()
-            if (i == expression.length) break
+    for (i in expression.split(' ')) {
+        if (zn) znIs = i == "+"
+        else ans += i.toInt() * if (znIs) 1 else -1
+        zn = !zn
+    }
+    return ans
+    /*
+    val engine = ScriptEngineManager().getEngineByName("JavaScript")
+    return engine.eval(expression).toString().toInt()
+     */ // мечтать не вредно...
 
-            if (expression[i] == ' ') i++
-            else throw IllegalArgumentException()
-
-            if (expression[i] in "+-") {
-                zn = expression[i] == '+'
-            } else throw IllegalArgumentException()
-
-            i++
-            if (expression[i] == ' ') i++
-            else throw IllegalArgumentException()
-        }
-        return (ans)
 }
 /**
  * Сложная (6 баллов)
@@ -179,18 +167,12 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     var ans = 0
     var lword = ""
-    var f = false
-    for (i in str.split(' ')) {
-        val i = i.lowercase()
-        if (i == lword) {
-            f = true
-            ans -= i.length+1
-            break
-        }
+    for (i in str.split(' ').map { it.lowercase() } ) {
+        if (i == lword) return ans - i.length - 1
         ans += i.length+1
         lword = i
     }
-    return if (f) ans else -1
+    return -1
 }
 
 /**
