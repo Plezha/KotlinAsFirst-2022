@@ -328,7 +328,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
 
     var j = capacity
-    while (n != 0) {
+    while (n > 0) {
         n--
         if (dp[n + 1][j] != dp[n][j]) {
             s.add(names[n])
@@ -337,3 +337,5 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
     return s
 }
+
+
