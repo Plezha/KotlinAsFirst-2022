@@ -288,7 +288,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     var nc = '\n'
     var cnt = 0
     var f = false
-    while (nc in "\n\t${13.toChar()}") { // Не ну это же кринж. Почему ваша правильно работающая программа считает, что пробел в начале файла - отдельный параграф? (и в конце - тоже... (в конце не фиксил))
+    while (nc in "\n\t${13.toChar()}") {
         reader.mark(1)
         nc = reader.read().toChar()
         if (nc in "\n\t ${13.toChar()}") writer.write(nc.toString())
@@ -348,7 +348,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
         File(inputName).bufferedWriter().use {
 
         }
-    }*/ //А как оно должно работать????
+    }*/ // На будущее
 }
 
 /**
