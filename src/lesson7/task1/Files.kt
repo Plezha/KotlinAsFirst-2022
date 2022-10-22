@@ -523,6 +523,7 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
 
     writer.write("</p></body></html>")
     writer.close()
+    reader.close()
 }
 
 /**
