@@ -196,7 +196,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 // Возможно, при решении через геому по-другому будет точнее
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle { // О, Господи, Иисусе Христе! Не отврати лица Твоего от меня, раба твоего Артёма, и уклонися гневом от раба Твоего: помошник мне буди, не отрини меня и не оставь меня да дай моему решению пройти по точности.
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle { // О, Господи, Иисусе Христе! Не отврати лица Твоего от меня, раба твоего Артёма, и уклонися гневом от раба Твоего: помошник мне буди, не отрини меня и не оставь меня, да дозволь моему решению пройти по точности.
     val x = (a.x*a.x*b.y - a.x*a.x*c.y + a.y*a.y*b.y - a.y*a.y*c.y - a.y*b.x*b.x - a.y*b.y*b.y + a.y*c.y*c.y + c.x*c.x*a.y + b.x*b.x*c.y + b.y*b.y*c.y - b.y*c.y*c.y - c.x*c.x*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
     val y = -(a.x*a.x*b.x - c.x*a.x*a.x - a.x*b.x*b.x - a.x*b.y*b.y + a.x*c.y*c.y + c.x*c.x*a.x + a.y*a.y*b.x - c.x*a.y*a.y + c.x*b.x*b.x - b.x*c.y*c.y - c.x*c.x*b.x + c.x*b.y*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
     val p = Point(x,y)
