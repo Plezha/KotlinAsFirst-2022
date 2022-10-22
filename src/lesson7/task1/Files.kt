@@ -287,13 +287,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var f = false
+    writer.write("<html><body><p>")
+
     while (nc.isWhitespace()) {
         reader.mark(1)
         nc = reader.read().toChar()
         if (nc.isWhitespace()) writer.write(nc.toString())
     }
     reader.reset()
-    writer.write("<html><body><p>")
 
     while (nc.code != 65535) {
         reader.mark(100)
@@ -314,7 +315,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
             reader.read() // skip '/n'
             while (cnt3 > 1) { // Возможно, если символ начала параграфа in "\t {13.toChar()}", тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
                 cnt3--
-                writer.write(reader.read().toChar().toString())
+                writer.write(reader.read())
             }
             if (f) writer.write("<p>")
             if (f) reader.read() // skip '\n'
@@ -341,6 +342,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     }
     writer.write("</p></body></html>")
     writer.close()
+    reader.close()
 
     /*File(outputName).bufferedReader().use {
         File(inputName).bufferedWriter().use {
@@ -454,19 +456,19 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
     var cnt = 0
     writer.write("<html><body><p>")
 
-    fun writeLn() {
+    fun writeUntilTheLineEnds() {
         while (nc != '\n' && nc.code != 65535) {
             writer.write(nc.toString())
             nc = reader.read().toChar()
         }
     }
 
-    fun MutableList<Pair<Int, String>>.add2(what: Pair<Int, String>){
+    fun MutableList<Pair<Int, String>>.addAndWrite(what: Pair<Int, String>){
         this.add(what)
         writer.write("<${what.second}>")
     }
 
-    fun MutableList<Pair<Int, String>>.removeLast2(){
+    fun MutableList<Pair<Int, String>>.removeAndWirte(){
         val what = this.removeLast()
         writer.write("</${what.second}>")
     }
@@ -502,22 +504,22 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
         } // nc == ' '
 
         if (st.isEmpty() || indentation > st.last().first) {
-            st.add2(indentation to if (isOl) "ol" else "ul")
-            st.add2(indentation to "li")
-            writeLn()
-        } else if (indentation < st.last().first || indentation == st.last().first) {
-            while (indentation != st.last().first) st.removeLast2()
-            st.removeLast2() // close <li>
+            st.addAndWrite(indentation to if (isOl) "ol" else "ul")
+            st.addAndWrite(indentation to "li")
+            writeUntilTheLineEnds()
+        } else {
+            while (indentation != st.last().first) st.removeAndWirte()
+            st.removeAndWirte() // close <li>
 
             if (st.last().second != if (isOl) "ol" else "ul") {
-                st.removeLast2()
-                st.add2(indentation to if (isOl) "ol" else "ul")
+                st.removeAndWirte()
+                st.addAndWrite(indentation to if (isOl) "ol" else "ul")
             }
-            st.add2(indentation to "li")
-            writeLn()
+            st.addAndWrite(indentation to "li")
+            writeUntilTheLineEnds()
         }
     }
-    while (st.isNotEmpty()) st.removeLast2()
+    while (st.isNotEmpty()) st.removeAndWirte()
 
     writer.write("</p></body></html>")
     writer.close()
