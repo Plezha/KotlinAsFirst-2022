@@ -3,10 +3,10 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import lesson2.task2.pointInsideCircle
+import ru.spbstu.wheels.NullableMonad.map
+import ru.spbstu.wheels.defaultCopy
+import kotlin.math.*
 
 // Урок 8: простые классы
 // Максимальное количество баллов = 40 (без очень трудных задач = 11)
@@ -89,7 +89,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = TODO()
+    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-8 // Мне не нравится, но без eps не всегда работает
 }
 
 /**
@@ -195,7 +195,13 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+// Возможно, при решении через геому по-другому будет точнее
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle { // О, Господи, Иисусе Христе! Не отврати лица Твоего от меня, раба твоего Артёма, и уклонися гневом от раба Твоего: помошник мне буди, не отрини меня и не оставь меня да дай моему решению пройти по точности.
+    val x = (a.x*a.x*b.y - a.x*a.x*c.y + a.y*a.y*b.y - a.y*a.y*c.y - a.y*b.x*b.x - a.y*b.y*b.y + a.y*c.y*c.y + c.x*c.x*a.y + b.x*b.x*c.y + b.y*b.y*c.y - b.y*c.y*c.y - c.x*c.x*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
+    val y = -(a.x*a.x*b.x - c.x*a.x*a.x - a.x*b.x*b.x - a.x*b.y*b.y + a.x*c.y*c.y + c.x*c.x*a.x + a.y*a.y*b.x - c.x*a.y*a.y + c.x*b.x*b.x - b.x*c.y*c.y - c.x*c.x*b.x + c.x*b.y*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
+    val p = Point(x,y)
+    return Circle(p, a.distance(p))
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -208,5 +214,42 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun circleByTwoPoints(a: Point, b: Point): Circle {
+    val center = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
+    return Circle(center, center.distance(a))
+}
+fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
+    println(points.toList())
+    var ansCircle = Circle(points[0],0.0)
 
+    if (points.isEmpty()) throw IllegalArgumentException()
+    else if (points.size == 2) {
+        ansCircle = circleByTwoPoints(points[0], points[1])
+    } else if (points.size > 2) {
+        ansCircle = circleByTwoPoints(points[0], points[1])
+        for (i in 2..points.size-1) {
+            val a = points[i]
+            if (!ansCircle.contains(a)) {
+                ansCircle = circleByTwoPoints(points[0], a)
+                for (j in 1..i-1) {
+                    val b = points[j]
+                    println("$i, $j, $a, $b, $ansCircle")
+                    println(ansCircle.contains(b))
+                    if (!ansCircle.contains(b)) {
+                        ansCircle = circleByTwoPoints(a, b)
+                        for (k in 0..j-1) {
+                            val c = points[k]
+                            if (!ansCircle.contains(c)) {
+                                println("$a $b $c")
+                                ansCircle = circleByThreePoints(a, b, c)
+                            }
+                        }
+                    }
+                }
+            }
+            println("ansCircle for i = $i is $ansCircle")
+        }
+    }
+    print(ansCircle)
+    return ansCircle
+}

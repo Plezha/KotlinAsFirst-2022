@@ -139,7 +139,8 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    if (!expression.matches(Regex("(\\d+ [+-] )*\\d+"))) throw IllegalArgumentException("Нарушен формат входной строки")
+    if (!expression.matches(Regex("(\\d+ [+-] )*\\d+")))
+        throw IllegalArgumentException("Нарушен формат входной строки")
     var znIs = true
     var zn = false
     var ans = 0
