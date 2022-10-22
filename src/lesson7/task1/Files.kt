@@ -287,10 +287,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var f = false
-    while (nc in "\n\t${13.toChar()}") {
+    while (nc.isWhitespace()) {
         reader.mark(1)
         nc = reader.read().toChar()
-        if (nc in "\n\t ${13.toChar()}") writer.write(nc.toString())
+        if (nc.isWhitespace()) writer.write(nc.toString())
     }
     reader.reset()
     writer.write("<html><body><p>")
@@ -302,7 +302,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
         if (nc == '\n') {
             var cnt2 = 0
             var cnt3 = 0
-            while (nc in "\n\t ${13.toChar()}") {
+            while (nc.isWhitespace()) {
                 if (nc == '\n') cnt3 = cnt2
                 nc = reader.read().toChar()
                 cnt2 += 1
