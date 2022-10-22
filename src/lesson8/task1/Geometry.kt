@@ -219,7 +219,7 @@ fun circleByTwoPoints(a: Point, b: Point): Circle {
     return Circle(center, center.distance(a))
 }
 fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
-    println(points.toList())
+    points.shuffle() // На этом моменте O(n^3) становится быстрее
     var ansCircle = Circle(points[0],0.0)
 
     if (points.isEmpty()) throw IllegalArgumentException()
@@ -233,14 +233,11 @@ fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
                 ansCircle = circleByTwoPoints(points[0], a)
                 for (j in 1..i-1) {
                     val b = points[j]
-                    println("$i, $j, $a, $b, $ansCircle")
-                    println(ansCircle.contains(b))
                     if (!ansCircle.contains(b)) {
                         ansCircle = circleByTwoPoints(a, b)
                         for (k in 0..j-1) {
                             val c = points[k]
                             if (!ansCircle.contains(c)) {
-                                println("$a $b $c")
                                 ansCircle = circleByThreePoints(a, b, c)
                             }
                         }

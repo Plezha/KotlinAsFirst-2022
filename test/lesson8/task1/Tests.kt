@@ -7,6 +7,7 @@ import java.lang.Math.ulp
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.system.exitProcess
 
 class Tests {
     @Test
@@ -235,8 +236,13 @@ class Tests {
     @Test
     @Tag("5")
     fun circleByThreePoints() {
-        val actual = circleByThreePoints(Point(5.0, 0.0), Point(3.0, 4.0), Point(0.0, -5.0))
-        val expected = Circle(Point(0.0, 0.0), 5.0)
+        var actual = circleByThreePoints(Point(5.0, 0.0), Point(3.0, 4.0), Point(0.0, -5.0))
+        var expected = Circle(Point(0.0, 0.0), 5.0)
+        assertApproxEquals(expected, actual, 1e-5)
+        actual = circleByThreePoints(Point(5.0, 4.0), Point(4.0, 5.0), Point(-2.0, -3.0))
+        expected = Circle(Point(1.0, 1.0), 5.0)
+        println(actual)
+        println(expected)
         assertApproxEquals(expected, actual, 1e-5)
     }
 
@@ -244,14 +250,16 @@ class Tests {
     @Tag("10")
     fun minContainingCircle() {
         val p1 = Point(0.0, 0.0)
-        val p2 = Point(1.0, 4.0)
-        val p3 = Point(-2.0, 2.0)
-        val p4 = Point(3.0, -1.0)
+        val p3 = Point(1.0, 4.0)
+        val p4 = Point(-2.0, 2.0)
+        val p6 = Point(3.0, -1.0)
         val p5 = Point(-3.0, -2.0)
-        val p6 = Point(0.0, 5.0)
+        val p2 = Point(0.0, 5.0)
+        println(circleByThreePoints(p1,p2,p3).contains(p4))
         val result = minContainingCircle(p1, p2, p3, p4, p5, p6)
-        assertEquals(4.0, result.radius, 0.02)
+        assertEquals(4.0, result.radius, 0.03)
         for (p in listOf(p1, p2, p3, p4, p5, p6)) {
+            println(p)
             assertTrue(result.contains(p))
         }
         // Набор точек для примера
