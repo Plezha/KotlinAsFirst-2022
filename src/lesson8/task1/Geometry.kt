@@ -89,7 +89,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-8 // Мне не нравится, но без eps не всегда работает
+    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-7 // Мне не нравится, но без eps не всегда работает
 }
 
 /**
