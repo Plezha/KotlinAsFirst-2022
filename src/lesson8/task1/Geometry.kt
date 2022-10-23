@@ -220,7 +220,7 @@ fun circleByTwoPoints(a: Point, b: Point): Circle {
 }
 fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
     if (points.isEmpty()) throw IllegalArgumentException()
-    points.shuffle() // На этом моменте O(n^3) становится быстрее
+    points.shuffle() // На этом моменте O(n^3) становится быстрее, хотя в котоеде, вроде, и так рандомно
     var ansCircle = Circle(points[0],0.0)
 
     if (points.size == 2) {
