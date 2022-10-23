@@ -89,7 +89,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-7 // Мне не нравится, но без eps не всегда работает
+    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-7 // Мне не нравится, но без eps не всегда работает, да и с ним - тоже не идеально
 }
 
 /**
@@ -219,11 +219,11 @@ fun circleByTwoPoints(a: Point, b: Point): Circle {
     return Circle(center, center.distance(a))
 }
 fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
+    if (points.isEmpty()) throw IllegalArgumentException()
     points.shuffle() // На этом моменте O(n^3) становится быстрее
     var ansCircle = Circle(points[0],0.0)
 
-    if (points.isEmpty()) throw IllegalArgumentException()
-    else if (points.size == 2) {
+    if (points.size == 2) {
         ansCircle = circleByTwoPoints(points[0], points[1])
     } else if (points.size > 2) {
         ansCircle = circleByTwoPoints(points[0], points[1])
