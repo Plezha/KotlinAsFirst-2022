@@ -87,7 +87,7 @@ data class Circle(val center: Point, val radius: Double) {
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
     // Мне не нравится, но без eps не всегда работает
-    fun contains(p: Point): Boolean = sqr(center.x - p.x) + sqr(center.y - p.y) <= radius*radius
+    fun contains(p: Point): Boolean = sqr(center.x - p.x) + sqr(center.y - p.y) <= radius*radius + 1e-9
 }
 
 /**
@@ -217,31 +217,30 @@ fun circleByTwoPoints(a: Point, b: Point): Circle {
     val center = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
     return Circle(center, center.distance(a))
 }
-fun minContainingCircle(vararg points: Point): Circle { // O(n^3)
+fun minContainingCircle(vararg points: Point): Circle { // O(n^3) в худшем случае, шанс которого пренебрежителен
     if (points.isEmpty()) throw IllegalArgumentException()
-    points.shuffle() // На этом моменте O(n^3) становится быстрее, хотя в котоеде, вроде, и так рандомно
-    var ansCircle = Circle(points[0],0.0)
+    points.shuffle()
+    if (points.size == 1) return Circle(points[0], 0.0)
+    else if (points.size == 2) return circleByTwoPoints(points[0], points[1])
 
-    if (points.size == 2) {
-        ansCircle = circleByTwoPoints(points[0], points[1])
-    } else if (points.size > 2) {
-        ansCircle = circleByTwoPoints(points[0], points[1])
-        for (i in 2..points.size-1) {
-            val a = points[i]
-            if (!ansCircle.contains(a)) {
-                ansCircle = circleByTwoPoints(points[0], a)
-                for (j in 1..i-1) {
-                    val b = points[j]
-                    if (!ansCircle.contains(b)) {
-                        ansCircle = circleByTwoPoints(a, b)
-                        for (k in 0..j-1) {
-                            val c = points[k]
-                            if (!ansCircle.contains(c)) ansCircle = circleByThreePoints(a, b, c)
-                        }
+    var ansCircle = circleByTwoPoints(points[0], points[1])
+    for (i in 2..points.size-1) {
+        val a = points[i]
+        if (!ansCircle.contains(a)) {
+            ansCircle = circleByTwoPoints(points[0], a)
+            for (j in 1..i-1) {
+                val b = points[j]
+                if (!ansCircle.contains(b)) {
+                    ansCircle = circleByTwoPoints(a, b)
+                    for (k in 0..j-1) {
+                        val c = points[k]
+                        if (!ansCircle.contains(c)) ansCircle = circleByThreePoints(a, b, c)
                     }
                 }
             }
         }
     }
     return ansCircle
+
+
 }
