@@ -3,9 +3,6 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import lesson2.task2.pointInsideCircle
-import ru.spbstu.wheels.NullableMonad.map
-import ru.spbstu.wheels.defaultCopy
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -89,7 +86,8 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-7 // Мне не нравится, но без eps не всегда работает, да и с ним - тоже не идеально
+    // Мне не нравится, но без eps не всегда работает
+    fun contains(p: Point): Boolean = sqr(center.x - p.x) + sqr(center.y - p.y) <= radius*radius
 }
 
 /**
@@ -197,8 +195,9 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  */
 // Возможно, при решении через геому по-другому будет точнее
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle { // О, Господи, Иисусе Христе! Не отврати лица Твоего от меня, раба твоего Артёма, и уклонися гневом от раба Твоего: помошник мне буди, не отрини меня и не оставь меня, да дозволь моему решению пройти по точности.
-    val x = (a.x*a.x*b.y - a.x*a.x*c.y + a.y*a.y*b.y - a.y*a.y*c.y - a.y*b.x*b.x - a.y*b.y*b.y + a.y*c.y*c.y + c.x*c.x*a.y + b.x*b.x*c.y + b.y*b.y*c.y - b.y*c.y*c.y - c.x*c.x*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
-    val y = -(a.x*a.x*b.x - c.x*a.x*a.x - a.x*b.x*b.x - a.x*b.y*b.y + a.x*c.y*c.y + c.x*c.x*a.x + a.y*a.y*b.x - c.x*a.y*a.y + c.x*b.x*b.x - b.x*c.y*c.y - c.x*c.x*b.x + c.x*b.y*b.y)/(2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y))
+    val o = 2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y)
+    val x = (a.x*a.x*b.y - a.x*a.x*c.y + a.y*a.y*b.y - a.y*a.y*c.y - a.y*b.x*b.x - a.y*b.y*b.y + a.y*c.y*c.y + c.x*c.x*a.y + b.x*b.x*c.y + b.y*b.y*c.y - b.y*c.y*c.y - c.x*c.x*b.y)/o
+    val y = -(a.x*a.x*b.x - c.x*a.x*a.x - a.x*b.x*b.x - a.x*b.y*b.y + a.x*c.y*c.y + c.x*c.x*a.x + a.y*a.y*b.x - c.x*a.y*a.y + c.x*b.x*b.x - b.x*c.y*c.y - c.x*c.x*b.x + c.x*b.y*b.y)/o
     val p = Point(x,y)
     return Circle(p, a.distance(p))
 }
