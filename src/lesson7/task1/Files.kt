@@ -307,10 +307,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     reader.reset()
 
     for (i in listOf("html", "body", "p")) st.addAndWrite(-1 to i)
+
     while (nc.code != 65535) {
         reader.mark(100)
         nc = reader.read().toChar()
-
         if (nc == '\n') {
             var cnt2 = 0
             var cnt3 = 0
@@ -329,6 +329,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             if (f) writer.write("<p>")
             if (f) reader.read() // skip '\n'
+
         } else if (nc == '~') {
             nc = reader.read().toChar()
             if (nc == '~') {
@@ -366,7 +367,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         } else if (nc.code != 65535) writer.write(nc.toString())
 
-        println(st)
+        //println(st)
     }
     repeat(3) {st.removeAndWrite()}
 
