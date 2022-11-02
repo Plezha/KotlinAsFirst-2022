@@ -281,21 +281,32 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать необязательно)
  */
-fun markdownToHtmlSimple(inputName: String, outputName: String) { // А зачем стек?
-    val d = mutableMapOf('b' to false, 'i' to false, 's' to false)
+fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    val st = mutableListOf<Pair<Int, String>>() // Int is always -1 here
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
-    var f = false
-    writer.write("<html><body><p>")
+    var f: Boolean
 
-    while (nc.isWhitespace()) {
+
+    fun MutableList<Pair<Int, String>>.addAndWrite(what: Pair<Int, String>){
+        this.add(what)
+        writer.write("<${what.second}>")
+    }
+
+    fun MutableList<Pair<Int, String>>.removeAndWrite(){
+        val what = this.removeLast()
+        writer.write("</${what.second}>")
+    }
+
+    while (nc.isWhitespace()) { //
         reader.mark(1)
         nc = reader.read().toChar()
-        if (nc.isWhitespace()) writer.write(nc.toString())
+        if (nc.isWhitespace() && nc != '\n') writer.write(nc.toString())
     }
     reader.reset()
 
+    for (i in listOf("html", "body", "p")) st.addAndWrite(-1 to i)
     while (nc.code != 65535) {
         reader.mark(100)
         nc = reader.read().toChar()
@@ -303,7 +314,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
         if (nc == '\n') {
             var cnt2 = 0
             var cnt3 = 0
-            while (nc.isWhitespace()) {
+            while (nc.isWhitespace()) { // skip nc and mark last '\n' in cnt3
                 if (nc == '\n') cnt3 = cnt2
                 nc = reader.read().toChar()
                 cnt2 += 1
@@ -311,36 +322,58 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) { // А заче
             reader.reset()
             f = (nc.code != 65535) && (cnt3 > 0)
 
-            if (f) writer.write("</p>")
+            if (f) {
+                if (st.last().second != "p") println("st.last().second is ${st.last().second} but should be <p>")
+                st.removeAndWrite()
+            }
             reader.read() // skip '/n'
-            while (cnt3 > 1) { // Возможно, если символ начала параграфа in "\t {13.toChar()}", тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
+            while (cnt3 > 1) { // Возможно, если символ начала параграфа is whitespace, тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
                 cnt3--
                 writer.write(reader.read())
             }
-            if (f) writer.write("<p>")
+            if (f) st.addAndWrite(-1 to "p")
             if (f) reader.read() // skip '\n'
-
         } else if (nc == '~') {
             nc = reader.read().toChar()
             if (nc == '~') {
-                writer.write("<${ if (d['s']!!) '/' else ' ' }s>")
-                d['s'] = !d['s']!!
+                if (st.last().second == "s") st.removeAndWrite()
+                else st.addAndWrite(-1 to "s")
             } else writer.write(nc.toString())
 
         } else if (nc == '*') {
             nc = reader.read().toChar()
             if (nc == '*') {
-                writer.write("<${ if (d['b']!!) '/' else ' ' }b>")
-                d['b'] = !d['b']!!
+                reader.mark(1)
+                nc = reader.read().toChar()
+                if (nc == '*') {
+                    if (st.last().second == "i") {
+                        st.removeAndWrite()
+                        if (st.last().second == "b") st.removeAndWrite()
+                        else st.addAndWrite(-1 to "b")
+                    } else if (st.last().second == "b") {
+                        st.removeAndWrite()
+                        if (st.last().second == "i") st.removeAndWrite()
+                        else st.addAndWrite(-1 to "i")
+                    } else {
+                        st.addAndWrite(-1 to "b")
+                        st.addAndWrite(-1 to "i")
+                    }
+                } else {
+                    if (st.last().second == "b") st.removeAndWrite()
+                    else st.addAndWrite(-1 to "b")
+                    reader.reset()
+                }
             } else {
-                writer.write("<${ if (d['i']!!) '/' else ' ' }i>")
-                d['i'] = !d['i']!!
+                if (st.last().second == "i") st.removeAndWrite()
+                else st.addAndWrite(-1 to "i")
                 reader.reset(); reader.read()
             }
         } else if (nc.code != 65535) writer.write(nc.toString())
 
+        println(st)
     }
-    writer.write("</p></body></html>")
+    repeat(3) {st.removeAndWrite()}
+
     writer.close()
     reader.close()
 
@@ -454,7 +487,6 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
     var cnt = 0
-    writer.write("<html><body><p>")
 
     fun writeUntilTheLineEnds() {
         while (nc != '\n' && nc.code != 65535) {
@@ -468,10 +500,12 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
         writer.write("<${what.second}>")
     }
 
-    fun MutableList<Pair<Int, String>>.removeAndWirte(){
+    fun MutableList<Pair<Int, String>>.removeAndWrite(){
         val what = this.removeLast()
         writer.write("</${what.second}>")
     }
+
+    for (i in listOf("html", "body", "p")) st.addAndWrite(-1 to i)
 
     while (nc.code != 65535) { // nc == '\n'
         var isOl = false
@@ -508,20 +542,19 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
             st.addAndWrite(indentation to "li")
             writeUntilTheLineEnds()
         } else {
-            while (indentation != st.last().first) st.removeAndWirte()
-            st.removeAndWirte() // close <li>
+            while (indentation != st.last().first) st.removeAndWrite()
+            st.removeAndWrite() // close <li>
 
             if (st.last().second != if (isOl) "ol" else "ul") {
-                st.removeAndWirte()
+                st.removeAndWrite()
                 st.addAndWrite(indentation to if (isOl) "ol" else "ul")
             }
             st.addAndWrite(indentation to "li")
             writeUntilTheLineEnds()
         }
     }
-    while (st.isNotEmpty()) st.removeAndWirte()
+    while (st.isNotEmpty()) st.removeAndWrite()
 
-    writer.write("</p></body></html>")
     writer.close()
     reader.close()
 }
