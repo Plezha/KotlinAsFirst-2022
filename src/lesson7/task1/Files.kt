@@ -314,24 +314,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (nc == '\n') {
             var cnt2 = 0
             var cnt3 = 0
-            while (nc.isWhitespace()) { // skip nc and mark last '\n' in cnt3
+            while (nc.isWhitespace()) {
                 if (nc == '\n') cnt3 = cnt2
                 nc = reader.read().toChar()
                 cnt2 += 1
             }
             reader.reset()
             f = (nc.code != 65535) && (cnt3 > 0)
-
-            if (f) {
-                if (st.last().second != "p") println("st.last().second is ${st.last().second} but should be <p>")
-                st.removeAndWrite()
-            }
+            if (f) writer.write("</p>")
             reader.read() // skip '/n'
-            while (cnt3 > 1) { // Возможно, если символ начала параграфа is whitespace, тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
+            while (cnt3 > 1) { // Возможно, если символ начала параграфа in "\t {13.toChar()}", тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
                 cnt3--
                 writer.write(reader.read())
             }
-            if (f) st.addAndWrite(-1 to "p")
+            if (f) writer.write("<p>")
             if (f) reader.read() // skip '\n'
         } else if (nc == '~') {
             nc = reader.read().toChar()
