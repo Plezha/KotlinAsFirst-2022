@@ -318,10 +318,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 nc = reader.read().toChar()
                 if (nc == '\n') f = true
             }
-            if (f && (nc.code != 65535)) {
-                writer.write("</p>")
-                writer.write("<p>")
-            }
+            if (f && (nc.code != 65535)) writer.write("</p><p>")
             reader.reset()
         } else if (nc == '~') {
             nc = reader.read().toChar()
