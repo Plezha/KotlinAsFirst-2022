@@ -286,7 +286,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
-    var f: Boolean
+    var f = false
 
 
     fun MutableList<Pair<Int, String>>.addAndWrite(what: Pair<Int, String>){
@@ -312,24 +312,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         reader.mark(100)
         nc = reader.read().toChar()
         if (nc == '\n') {
-            var cnt2 = 0
-            var cnt3 = 0
             while (nc.isWhitespace()) {
-                if (nc == '\n') cnt3 = cnt2
                 nc = reader.read().toChar()
-                cnt2 += 1
+                if (nc == '\n') f = true
             }
-            reader.reset()
-            f = (nc.code != 65535) && (cnt3 > 0)
-            if (f) writer.write("</p>")
-            reader.read() // skip '/n'
-            while (cnt3 > 1) { // Возможно, если символ начала параграфа in "\t {13.toChar()}", тут немного следует что-то поменять, но проходит и так ¯\_(ツ)_/¯
-                cnt3--
-                writer.write(reader.read())
+            f = (nc.code != 65535) && f
+            if (f) {
+                writer.write("</p>")
+                writer.write("<p>")
             }
-            if (f) writer.write("<p>")
-            if (f) reader.read() // skip '\n'
-
+            if (nc.code != 65535) writer.write(nc.toString())
         } else if (nc == '~') {
             nc = reader.read().toChar()
             if (nc == '~') {
