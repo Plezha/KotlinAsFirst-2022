@@ -286,7 +286,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
     var nc = '\n'
-    var f = false
+    var f: Boolean
 
 
     fun MutableList<Pair<Int, String>>.addAndWrite(what: Pair<Int, String>){
@@ -312,12 +312,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         reader.mark(100)
         nc = reader.read().toChar()
         if (nc == '\n') {
+            f = false
             while (nc.isWhitespace()) {
                 nc = reader.read().toChar()
                 if (nc == '\n') f = true
             }
-            f = (nc.code != 65535) && f
-            if (f) {
+            if (f && (nc.code != 65535)) {
                 writer.write("</p>")
                 writer.write("<p>")
             }
