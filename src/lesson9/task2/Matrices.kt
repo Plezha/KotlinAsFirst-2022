@@ -245,7 +245,40 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    for (move in moves) {
+        //println(matrix)
+        //print("$move, trying:")
+        var row = 0
+        var column = 0
+        if (move !in 1..15) throw IllegalStateException("Move must be in 1..15")
+
+        while (matrix[row, column] != move) {
+            //print("$row, $column: matrix[row, column]")
+            if (column == 3) {
+                column = -1
+                row++
+            }
+            column++
+        }
+        //println()
+        if (column < 3 && matrix[row, column + 1] == 0) matrix[row, column] = matrix[row, column + 1].also {
+            matrix[row, column + 1] = matrix[row, column]
+        }
+        else if (column > 0 && matrix[row, column - 1] == 0) matrix[row, column] = matrix[row, column - 1].also {
+            matrix[row, column - 1] = matrix[row, column]
+        }
+        else if (row < 3 && matrix[row + 1, column] == 0) matrix[row, column] = matrix[row + 1, column].also {
+            matrix[row + 1, column] = matrix[row, column]
+        }
+        else if (row > 0 && matrix[row - 1, column] == 0) matrix[row, column] = matrix[row - 1, column].also {
+            matrix[row - 1, column] = matrix[row, column]
+        }
+        else throw IllegalStateException("$move has no 0 neighbour")
+    }
+
+    return matrix
+}
 
 /**
  * Очень сложная (32 балла)

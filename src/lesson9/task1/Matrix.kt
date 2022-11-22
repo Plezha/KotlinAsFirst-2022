@@ -2,6 +2,9 @@
 
 package lesson9.task1
 
+import lesson6.task1.twoDigitStr
+import java.lang.StringBuilder
+
 // Урок 9: проектирование классов
 // Максимальное количество баллов = 40 (без очень трудных задач = 15)
 
@@ -44,32 +47,56 @@ interface Matrix<E> {
  * height = высота, width = ширина, e = чем заполнить элементы.
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
-fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
+fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = MatrixImpl(height, width, e)
 
 /**
  * Средняя сложность (считается двумя задачами в 3 балла каждая)
  *
  * Реализация интерфейса "матрица"
  */
-class MatrixImpl<E> : Matrix<E> {
-    override val height: Int = TODO()
+class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : Matrix<E> {
+    val matrix = MutableList(height*width) {e}
+    override fun get(row: Int, column: Int): E = matrix[width*row + column]
 
-    override val width: Int = TODO()
-
-    override fun get(row: Int, column: Int): E = TODO()
-
-    override fun get(cell: Cell): E = TODO()
+    override fun get(cell: Cell): E = matrix[width*cell.row + cell.column]
 
     override fun set(row: Int, column: Int, value: E) {
-        TODO()
+        matrix[width*row + column] = value
     }
 
     override fun set(cell: Cell, value: E) {
-        TODO()
+        matrix[width*cell.row + cell.column] = value
     }
 
-    override fun equals(other: Any?) = TODO()
+    override fun equals(other: Any?): Boolean {
+        if (other !is Matrix<*> || other.width != width || other.height != height) return false
 
-    override fun toString(): String = TODO()
+        for (row in 0..height-1) {
+            for (column in 0..width-1) {
+                if (matrix[width*row + column] != other[row, column]) return false
+            }
+        }
+
+        return true
+    }
+
+    override fun toString(): String {
+        val s = StringBuilder()
+        for (row in 0 until height) {
+            for (column in 0 until width) {
+                s.append(matrix[width*row + column])
+                if (column != width-1) s.append(' ')
+            }
+            if (row != height-1) s.append('\n')
+        }
+
+        return s.toString()
+    }
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        result = 31 * result + matrix.hashCode()
+        return result
+    }
 }
 

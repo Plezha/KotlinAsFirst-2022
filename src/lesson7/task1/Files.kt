@@ -2,7 +2,10 @@
 
 package lesson7.task1
 
-import java.io.File //
+import ru.spbstu.wheels.deque
+import java.io.File
+import java.util.*
+import kotlin.collections.ArrayDeque
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
