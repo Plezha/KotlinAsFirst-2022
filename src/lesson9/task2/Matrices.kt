@@ -4,6 +4,8 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -319,4 +321,147 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
-fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> = TODO()
+fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
+    val ans = MutableList(0){0}
+    val whereIs = MutableList(16){-1 to -1} // Some sort of map
+    for (i in 0..3) {
+        for (j in 0..3) {
+            whereIs[matrix[i, j]] = i to j
+        }
+    }
+
+    fun aMove(n: Int, mode: Int = 0) {
+        val row = if (mode == 1) n/4 else whereIs[n].first
+        val column = if (mode == 1) n%4 else whereIs[n].second
+        for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
+            if (row + i in 0..3 && column + j in 0..3 && matrix[row + i, column + j] == 0)  {
+                matrix[row, column] = matrix[row + i, column + j].also {
+                    matrix[row + i, column + j] = matrix[row, column]
+                }
+                whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
+                    whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
+                }
+                return
+            }
+        }
+        throw IllegalStateException("$n has no 0 neighbour")
+    }
+
+
+    fun ease() {
+        while (true) {
+            var easy = true
+            for (i in 0..7) if (matrix[i/4, i%4] !in 0..7) easy = false
+            if (matrix[2,3] != 8) easy = false
+            if (easy) break
+            // Make random move
+            val row = whereIs[0].first
+            val column = whereIs[0].second
+            for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
+                if (row + i in 0..3 && column + j in 0..3 && Random.nextInt(3) == 0) {
+                    ans.add(matrix[row + i, column + j])
+                    matrix[row, column] = matrix[row + i, column + j].also {
+                        matrix[row + i, column + j] = matrix[row, column]
+                    }
+                    whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
+                        whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
+                    }
+                    break
+                }
+            }
+        }
+        println(matrix)
+    }
+
+    fun solve2x4l() {
+        val winCombs = mutableSetOf(
+            listOf(9,10,11,12,
+                13,14,15,0),
+            listOf(9,10,11,12,
+                13,15,14,0),
+            /*listOf(13,9,10,11,
+                14,15,0,12),
+            listOf(13,9,10,11,
+                15,14,0,12),
+            listOf(14,13,9,10,
+                15,0,12,11),
+            listOf(15,13,9,10,
+                14,0,12,11),
+            listOf(15,14,13,9,
+                0,12,11,10),
+            listOf(14,15,13,9,
+                0,12,11,10),*/
+        )
+        //println(winCombs)
+        while (true) {
+            val curComb = MutableList(0){0}
+            for (i in 8..15) curComb.add(matrix[i/4, i%4])
+            curComb.toList() // Any better ways to "curComb = [matrix[i//4, i%4] for i in range(8,16)]" in Kotlin?
+            if (curComb in winCombs) break
+            // Make random move within 2 bottom rows
+            val row = whereIs[0].first
+            val column = whereIs[0].second
+            for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
+                if (row + i in 2..3 && column + j in 0..3 && Random.nextInt(3) == 0) {
+                    ans.add(matrix[row + i, column + j])
+                    matrix[row, column] = matrix[row + i, column + j].also {
+                        matrix[row + i, column + j] = matrix[row, column]
+                    }
+                    whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
+                        whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
+                    }
+                    //println("$matrix\n")
+                    break
+                }
+            }
+        }
+        //println(winCombs)
+        println("$matrix\n")
+    }
+
+    fun solve2x4u() {
+        val winCombs = mutableSetOf(
+            listOf(1,2,3,4,
+                5,6,7,0),
+            listOf(1,2,3,4,
+                5,7,6,0))
+        //println(winCombs)
+        while (true) {
+            val curComb = MutableList(0){0}
+            for (i in 0..7) curComb.add(matrix[i/4, i%4])
+            curComb.toList()
+            if (curComb in winCombs) break
+            // Make random move within 2 upper rows
+            val row = whereIs[0].first
+            val column = whereIs[0].second
+            for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
+                if (row + i in 0..1 && column + j in 0..3 && Random.nextInt(3) == 0) {
+                    ans.add(matrix[row + i, column + j])
+                    matrix[row, column] = matrix[row + i, column + j].also {
+                        matrix[row + i, column + j] = matrix[row, column]
+                    }
+                    whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
+                        whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
+                    }
+                    //println("$matrix\n")
+                    break
+                }
+            }
+        }
+        //println(winCombs)
+        println("$matrix\n")
+    }
+
+    ease()
+    println("eased")
+    TimeUnit.SECONDS.sleep(3)
+    solve2x4u()
+    if (matrix[1,1] == 7) {
+        1
+    }
+    ans.add(8)
+    aMove(8)
+    solve2x4l()
+    TimeUnit.SECONDS.sleep(3)
+    return ans
+}

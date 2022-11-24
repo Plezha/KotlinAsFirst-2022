@@ -241,6 +241,5 @@ fun minContainingCircle(vararg points: Point): Circle { // O(n^3) в худше�
         }
     }
     return ansCircle
-
-
 }
+
