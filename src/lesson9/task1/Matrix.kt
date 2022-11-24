@@ -59,7 +59,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
     override fun get(cell: Cell): E = matrix[width*cell.row + cell.column]
 
-    fun get(n: Int): E = matrix[n]
 
 
     override fun set(row: Int, column: Int, value: E) {
@@ -68,9 +67,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
     override fun set(cell: Cell, value: E) {
         matrix[width*cell.row + cell.column] = value
     }
-    fun set(n: Int, value: E) {
-        matrix[n] = value
-    }
+
 
     override fun equals(other: Any?): Boolean {
         if (other !is Matrix<*> || other.width != width || other.height != height) return false
@@ -102,6 +99,12 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         result = 31 * result + matrix.hashCode()
         return result
     }
+}
+
+operator fun <E> Matrix<E>.get(n: Int): E = this[n/4, n%4]
+
+operator fun <E> Matrix<E>.set(n: Int, value: E) {
+    this[n/4, n%4] = value
 }
 
 fun <E> createMatrix(height: Int, width: Int, values: List<List<E>>): Matrix<E> {

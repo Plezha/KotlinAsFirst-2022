@@ -4,6 +4,8 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import lesson9.task1.get
+import lesson9.task1.set
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
