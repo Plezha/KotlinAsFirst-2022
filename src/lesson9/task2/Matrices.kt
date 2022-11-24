@@ -332,7 +332,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         }
     }
 
-    fun aMove(n: Int, mode: Int = 0) {
+    fun aMove(n: Int, mode: Int = 0) { // mode 1 is for Ints
         val row = if (mode == 1) n/4 else whereIs[n].first
         val column = if (mode == 1) n%4 else whereIs[n].second
         ans.add(if (mode == 1) matrix[n] else n)
@@ -375,36 +375,17 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         }
     }
 
-    fun solve2x4l() {
-        val winCombs = mutableSetOf(
-            listOf(9,10,11,12,
-                13,14,15,0),
-            listOf(9,10,11,12,
-                13,15,14,0),
-            /*listOf(13,9,10,11,
-                14,15,0,12),
-            listOf(13,9,10,11,
-                15,14,0,12),
-            listOf(14,13,9,10,
-                15,0,12,11),
-            listOf(15,13,9,10,
-                14,0,12,11),
-            listOf(15,14,13,9,
-                0,12,11,10),
-            listOf(14,15,13,9,
-                0,12,11,10),*/
-        )
-        //println(winCombs)
+    fun solve2x4(rowRange: IntRange, vararg winCombs: List<Int>) {
         while (true) {
             val curComb = MutableList(0){0}
-            for (i in 8..15) curComb.add(matrix[i/4, i%4])
-            curComb.toList() // Any better ways to "curComb = [matrix[i//4, i%4] for i in range(8,16)]" in Kotlin?
+            for (i in rowRange.first * 4 until (rowRange.last + 1)*4) curComb.add(matrix[i/4, i%4])
+            curComb.toList() // Any better ways to "curComb = [matrix[i//4, i%4] for i in range(rowRange.first*4, (rowRange.last + 1)*4)]" in Kotlin?
             if (curComb in winCombs) break
-            // Make random move within 2 bottom rows
+            // Make random move within rows in rowRange
             val row = whereIs[0].first
             val column = whereIs[0].second
             for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
-                if (row + i in 2..3 && column + j in 0..3 && Random.nextInt(3) == 0) {
+                if (row + i in rowRange && column + j in 0..3 && Random.nextInt(3) == 0) {
                     ans.add(matrix[row + i, column + j])
                     matrix[row, column] = matrix[row + i, column + j].also {
                         matrix[row + i, column + j] = matrix[row, column]
@@ -412,38 +393,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                     whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
                         whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
                     }
-                    //println("$matrix\n")
-                    break
-                }
-            }
-        }
-    }
 
-    fun solve2x4u() {
-        val winCombs = mutableSetOf(
-            listOf(1,2,3,4,
-                5,6,7,0),
-            listOf(1,2,3,4,
-                5,7,6,0))
-        //println(winCombs)
-        while (true) {
-            val curComb = MutableList(0){0}
-            for (i in 0..7) curComb.add(matrix[i/4, i%4])
-            curComb.toList()
-            if (curComb in winCombs) break
-            // Make random move within 2 upper rows
-            val row = whereIs[0].first
-            val column = whereIs[0].second
-            for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
-                if (row + i in 0..1 && column + j in 0..3 && Random.nextInt(3) == 0) {
-                    ans.add(matrix[row + i, column + j])
-                    matrix[row, column] = matrix[row + i, column + j].also {
-                        matrix[row + i, column + j] = matrix[row, column]
-                    }
-                    whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
-                        whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
-                    }
-                    //println("$matrix\n")
                     break
                 }
             }
@@ -452,11 +402,21 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     ease()
     //println("Eased:\n$matrix")
-    solve2x4u()
+    solve2x4(0..1,
+        listOf(1,2,3,4,
+            5,6,7,0),
+        listOf(1,2,3,4,
+            5,7,6,0)
+    )
     //println("Upper half solved:\n$matrix")
     if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i, 1)
     //println("Upper half actually solved:\n$matrix")
-    solve2x4l()
+    solve2x4(2..3,
+        listOf(9,10,11,12,
+            13,14,15,0),
+        listOf(9,10,11,12,
+            13,15,14,0),
+    )
     //println("Lower half solved:\n$matrix")
     return ans
 }
