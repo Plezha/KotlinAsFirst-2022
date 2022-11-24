@@ -29,7 +29,7 @@ interface Matrix<E> {
      */
     operator fun get(row: Int, column: Int): E
     operator fun get(cell: Cell): E
-    operator fun get(n: Int): E
+
 
     /**
      * Запись в ячейку.
@@ -37,7 +37,6 @@ interface Matrix<E> {
      */
     operator fun set(row: Int, column: Int, value: E)
     operator fun set(cell: Cell, value: E)
-    operator fun set(n: Int, value: E)
 }
 
 /**
@@ -60,7 +59,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
     override fun get(cell: Cell): E = matrix[width*cell.row + cell.column]
 
-    override fun get(n: Int): E = matrix[n]
+    fun get(n: Int): E = matrix[n]
 
 
     override fun set(row: Int, column: Int, value: E) {
@@ -69,7 +68,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
     override fun set(cell: Cell, value: E) {
         matrix[width*cell.row + cell.column] = value
     }
-    override fun set(n: Int, value: E) {
+    fun set(n: Int, value: E) {
         matrix[n] = value
     }
 
