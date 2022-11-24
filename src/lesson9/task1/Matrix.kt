@@ -28,16 +28,16 @@ interface Matrix<E> {
      * Методы могут бросить исключение, если ячейка не существует или пуста
      */
     operator fun get(row: Int, column: Int): E
-
     operator fun get(cell: Cell): E
+    operator fun get(n: Int): E
 
     /**
      * Запись в ячейку.
      * Методы могут бросить исключение, если ячейка не существует
      */
     operator fun set(row: Int, column: Int, value: E)
-
     operator fun set(cell: Cell, value: E)
+    operator fun set(n: Int, value: E)
 }
 
 /**
@@ -60,12 +60,17 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
     override fun get(cell: Cell): E = matrix[width*cell.row + cell.column]
 
+    override fun get(n: Int): E = matrix[n]
+
+
     override fun set(row: Int, column: Int, value: E) {
         matrix[width*row + column] = value
     }
-
     override fun set(cell: Cell, value: E) {
         matrix[width*cell.row + cell.column] = value
+    }
+    override fun set(n: Int, value: E) {
+        matrix[n] = value
     }
 
     override fun equals(other: Any?): Boolean {
@@ -85,7 +90,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         for (row in 0 until height) {
             for (column in 0 until width) {
                 s.append(matrix[width*row + column])
-                if (column != width-1) s.append(' ')
+                if (column != width-1) s.append('\t')
             }
             if (row != height-1) s.append('\n')
         }
@@ -98,5 +103,15 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         result = 31 * result + matrix.hashCode()
         return result
     }
+}
+
+fun <E> createMatrix(height: Int, width: Int, values: List<List<E>>): Matrix<E> {
+    val matrix = createMatrix(height, width, values[0][0])
+    for (row in 0 until height) {
+        for (column in 0 until width) {
+            matrix[row, column] = values[row][column]
+        }
+    }
+    return matrix
 }
 

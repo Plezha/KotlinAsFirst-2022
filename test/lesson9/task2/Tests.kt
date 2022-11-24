@@ -396,7 +396,7 @@ class Tests {
     @Test
     @Tag("32")
     fun fifteenGameSolution() {
-        /*createMatrix(
+        createMatrix(
             4, 4, listOf(
                 listOf(1, 2, 3, 4), listOf(5, 6, 7, 8),
                 listOf(9, 10, 11, 12), listOf(13, 14, 15, 0)
@@ -413,7 +413,7 @@ class Tests {
                 listOf(1, 2, 3, 4), listOf(5, 6, 7, 8),
                 listOf(15,12,10,0), listOf(13,14,11,9)
             )
-        ).assertSolution()*/
+        ).assertSolution()
         createMatrix(
             4, 4, listOf(
                 listOf(5, 7, 9, 2), listOf(1, 12, 14, 15),

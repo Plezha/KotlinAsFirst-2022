@@ -333,6 +333,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     fun aMove(n: Int, mode: Int = 0) {
         val row = if (mode == 1) n/4 else whereIs[n].first
         val column = if (mode == 1) n%4 else whereIs[n].second
+        ans.add(if (mode == 1) matrix[n] else n)
         for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
             if (row + i in 0..3 && column + j in 0..3 && matrix[row + i, column + j] == 0)  {
                 matrix[row, column] = matrix[row + i, column + j].also {
@@ -370,7 +371,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 }
             }
         }
-        println(matrix)
     }
 
     fun solve2x4l() {
@@ -415,8 +415,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 }
             }
         }
-        //println(winCombs)
-        println("$matrix\n")
     }
 
     fun solve2x4u() {
@@ -448,20 +446,15 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 }
             }
         }
-        //println(winCombs)
-        println("$matrix\n")
     }
 
     ease()
-    println("eased")
-    TimeUnit.SECONDS.sleep(3)
+    //println("Eased:\n$matrix")
     solve2x4u()
-    if (matrix[1,1] == 7) {
-        1
-    }
-    ans.add(8)
-    aMove(8)
+    //println("Upper half solved:\n$matrix")
+    if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i, 1)
+    //println("Upper half actually solved:\n$matrix")
     solve2x4l()
-    TimeUnit.SECONDS.sleep(3)
+    //println("Lower half solved:\n$matrix")
     return ans
 }
