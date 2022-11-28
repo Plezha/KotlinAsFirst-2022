@@ -331,10 +331,10 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         }
     }
 
-    fun aMove(n: Int, mode: Int = 0) { // mode 1 is for Ints
-        val row = if (mode == 1) n/4 else whereIs[n].first
-        val column = if (mode == 1) n%4 else whereIs[n].second
-        ans.add(if (mode == 1) matrix[n] else n)
+    fun aMove(n: Int) { // move matrix[n] if possible
+        val row = n/4
+        val column = n%4
+        ans.add(matrix[n])
         for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
             if (row + i in 0..3 && column + j in 0..3 && matrix[row + i, column + j] == 0)  {
                 matrix[row, column] = matrix[row + i, column + j].also {
@@ -346,7 +346,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 return
             }
         }
-        throw IllegalStateException("$n has no 0 neighbour")
+        throw IllegalStateException("matrix[$n] has no 0 neighbour")
     }
 
 
@@ -408,7 +408,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             5,7,6,0),
     )
     //println("Upper half solved:\n$matrix")
-    if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i, 1)
+    if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i)
     //println("Upper half actually solved:\n$matrix")
     solve2x4(2..3,
         listOf(9,10,11,12,
