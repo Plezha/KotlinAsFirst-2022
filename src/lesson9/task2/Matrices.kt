@@ -250,35 +250,34 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 3 10 11  8
  */
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
-    for (move in moves) {
+    val whereIs = MutableList(16){-1 to -1} // Some sort of map
+    for (i in 0..3) {
+        for (j in 0..3) {
+            whereIs[matrix[i, j]] = i to j
+        }
+    }
+    for (n in moves) {
         //println(matrix)
         //print("$move, trying:")
-        var row = 0
-        var column = 0
-        if (move !in 1..15) throw IllegalStateException("Move must be in 1..15")
 
-        while (matrix[row, column] != move) {
-            //print("$row, $column: matrix[row, column]")
-            if (column == 3) {
-                column = -1
-                row++
+        if (n !in 1..15) throw IllegalStateException("Move must be in 1..15")
+
+        var ok = false
+        val row = whereIs[n].first
+        val column = whereIs[n].second
+        for ((i, j) in listOf((0 to 1), (0 to -1), (1 to 0), (-1 to 0))) {
+            if (row + i in 0..3 && column + j in 0..3 && matrix[row + i, column + j] == 0)  {
+                matrix[row, column] = matrix[row + i, column + j].also {
+                    matrix[row + i, column + j] = matrix[row, column]
+                }
+                whereIs[matrix[row, column]] = whereIs[matrix[row + i, column + j]].also {
+                    whereIs[matrix[row + i, column + j]] = whereIs[matrix[row, column]]
+                }
+                ok = true
+
             }
-            column++
         }
-        //println()
-        if (column < 3 && matrix[row, column + 1] == 0) matrix[row, column] = matrix[row, column + 1].also {
-            matrix[row, column + 1] = matrix[row, column]
-        }
-        else if (column > 0 && matrix[row, column - 1] == 0) matrix[row, column] = matrix[row, column - 1].also {
-            matrix[row, column - 1] = matrix[row, column]
-        }
-        else if (row < 3 && matrix[row + 1, column] == 0) matrix[row, column] = matrix[row + 1, column].also {
-            matrix[row + 1, column] = matrix[row, column]
-        }
-        else if (row > 0 && matrix[row - 1, column] == 0) matrix[row, column] = matrix[row - 1, column].also {
-            matrix[row - 1, column] = matrix[row, column]
-        }
-        else throw IllegalStateException("$move has no 0 neighbour")
+        if (!ok) throw IllegalStateException("$n has no 0 neighbour")
     }
 
     return matrix
@@ -401,12 +400,12 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
 
     ease()
-    //println("Eased:\n$matrix")
+    println("Eased:\n$matrix")
     solve2x4(0..1,
         listOf(1,2,3,4,
             5,6,7,0),
         listOf(1,2,3,4,
-            5,7,6,0)
+            5,7,6,0),
     )
     //println("Upper half solved:\n$matrix")
     if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i, 1)
@@ -418,5 +417,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             13,15,14,0),
     )
     //println("Lower half solved:\n$matrix")
+    println(ans.size)
     return ans
 }
