@@ -285,80 +285,86 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать необязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val st = mutableListOf<Pair<Int, String>>() // Int is always -1 here
+    val st = mutableListOf<String>()
     val writer = File(outputName).bufferedWriter()
     val reader = File(inputName).bufferedReader()
+    var c = 10
     var nc = '\n'
+
     var f: Boolean
-
-
-    fun MutableList<Pair<Int, String>>.addAndWrite(what: Pair<Int, String>){
+    fun MutableList<String>.addAndWrite(what: String){
         this.add(what)
-        writer.write("<${what.second}>")
+        writer.write("<$what>")
     }
 
-    fun MutableList<Pair<Int, String>>.removeAndWrite(){
+    fun MutableList<String>.removeAndWrite(){
         val what = this.removeLast()
-        writer.write("</${what.second}>")
+        writer.write("</$what>")
     }
 
     while (nc.isWhitespace()) { //
         reader.mark(1)
-        nc = reader.read().toChar()
+        c = reader.read()
+        nc = c.toChar()
         if (nc.isWhitespace() && nc != '\n') writer.write(nc.toString())
     }
     reader.reset()
 
-    for (i in listOf("html", "body", "p")) st.addAndWrite(-1 to i)
+    for (i in listOf("html", "body", "p")) st.addAndWrite(i)
 
-    while (nc.code != 65535) {
+    while (c != -1) {
         reader.mark(100)
-        nc = reader.read().toChar()
+        c = reader.read()
+        nc = c.toChar()
         if (nc == '\n') {
             f = false
             while (nc.isWhitespace()) {
                 reader.mark(1)
-                nc = reader.read().toChar()
+                c = reader.read()
+                nc = c.toChar()
                 if (nc == '\n') f = true
             }
             if (f && (nc.code != 65535)) writer.write("</p><p>")
             reader.reset()
         } else if (nc == '~') {
-            nc = reader.read().toChar()
+            c = reader.read()
+            nc = c.toChar()
             if (nc == '~') {
-                if (st.last().second == "s") st.removeAndWrite()
-                else st.addAndWrite(-1 to "s")
+                if (st.last() == "s") st.removeAndWrite()
+                else st.addAndWrite("s")
             } else writer.write(nc.toString())
 
         } else if (nc == '*') {
-            nc = reader.read().toChar()
+            c = reader.read()
+            nc = c.toChar()
             if (nc == '*') {
                 reader.mark(1)
-                nc = reader.read().toChar()
+                c = reader.read()
+                nc = c.toChar()
                 if (nc == '*') {
-                    if (st.last().second == "i") {
+                    if (st.last() == "i") {
                         st.removeAndWrite()
-                        if (st.last().second == "b") st.removeAndWrite()
-                        else st.addAndWrite(-1 to "b")
-                    } else if (st.last().second == "b") {
+                        if (st.last() == "b") st.removeAndWrite()
+                        else st.addAndWrite("b")
+                    } else if (st.last() == "b") {
                         st.removeAndWrite()
-                        if (st.last().second == "i") st.removeAndWrite()
-                        else st.addAndWrite(-1 to "i")
+                        if (st.last() == "i") st.removeAndWrite()
+                        else st.addAndWrite("i")
                     } else {
-                        st.addAndWrite(-1 to "b")
-                        st.addAndWrite(-1 to "i")
+                        st.addAndWrite("b")
+                        st.addAndWrite("i")
                     }
                 } else {
-                    if (st.last().second == "b") st.removeAndWrite()
-                    else st.addAndWrite(-1 to "b")
+                    if (st.last() == "b") st.removeAndWrite()
+                    else st.addAndWrite("b")
                     reader.reset()
                 }
             } else {
-                if (st.last().second == "i") st.removeAndWrite()
-                else st.addAndWrite(-1 to "i")
+                if (st.last() == "i") st.removeAndWrite()
+                else st.addAndWrite("i")
                 reader.reset(); reader.read()
             }
-        } else if (nc.code != 65535) writer.write(nc.toString())
+        } else if (c != -1) writer.write(nc.toString())
 
         //println(st)
     }
