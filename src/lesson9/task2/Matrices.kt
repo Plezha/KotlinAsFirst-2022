@@ -376,9 +376,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
 
     fun solve2x4(rowRange: IntRange, vararg winCombs: List<Int>) {
         while (true) {
-            val curComb = MutableList(0){0}
-            for (i in rowRange.first * 4 until (rowRange.last + 1)*4) curComb.add(matrix[i/4, i%4])
-            curComb.toList() // Any better ways to "curComb = [matrix[i//4, i%4] for i in range(rowRange.first*4, (rowRange.last + 1)*4)]" in Kotlin?
+            val curComb = rowRange.flatMap {row -> (0..3).map {col -> matrix[row, col] }}
             if (curComb in winCombs) break
             // Make random move within rows in rowRange
             val row = whereIs[0].first
@@ -400,7 +398,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
 
     ease()
-    println("Eased:\n$matrix")
+    //println("Eased:\n$matrix")
     solve2x4(0..1,
         listOf(1,2,3,4,
             5,6,7,0),

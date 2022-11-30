@@ -2,7 +2,6 @@
 
 package lesson9.task1
 
-import lesson6.task1.twoDigitStr
 import java.lang.StringBuilder
 
 // Урок 9: проектирование классов
@@ -72,15 +71,9 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
 
     override fun equals(other: Any?): Boolean {
-        if (other !is Matrix<*> || other.width != width || other.height != height) return false
+        if (other !is MatrixImpl<*> || other.width != width || other.height != height) return false
 
-        for (row in 0..height-1) {
-            for (column in 0..width-1) {
-                if (matrix[width*row + column] != other[row, column]) return false
-            }
-        }
-
-        return true
+        return matrix == other.matrix
     }
 
     override fun toString(): String {
@@ -118,4 +111,3 @@ fun <E> createMatrix(height: Int, width: Int, values: List<List<E>>): Matrix<E> 
     }
     return matrix
 }
-
