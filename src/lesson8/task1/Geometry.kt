@@ -221,9 +221,8 @@ fun circleByTwoPoints(a: Point, b: Point): Circle {
     return Circle(center, center.distance(a))
 }
 fun minContainingCircle(vararg points: Point): Circle { // O(n^3) в худшем случае, шанс которого пренебрежителен
-    points.toSet()
     if (points.isEmpty()) throw IllegalArgumentException()
-    points.shuffle()
+    //points.shuffle()
     if (points.size == 1) return Circle(points[0], 0.0)
     else if (points.size == 2) return circleByTwoPoints(points[0], points[1])
 
