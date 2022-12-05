@@ -196,8 +196,11 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
 // Возможно, при решении через геому по-другому будет точнее
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle { // О, Господи, Иисусе Христе! Не отврати лица Твоего от меня, раба твоего Артёма, и уклонися гневом от раба Твоего: помошник мне буди, не отрини меня и не оставь меня, да дозволь моему решению пройти по точности.
     val o = 2*(a.x*b.y - a.x*c.y - a.y*b.x + c.x*a.y + b.x*c.y - c.x*b.y)
-    val x = (a.x*a.x*b.y - a.x*a.x*c.y + a.y*a.y*b.y - a.y*a.y*c.y - a.y*b.x*b.x - a.y*b.y*b.y + a.y*c.y*c.y + c.x*c.x*a.y + b.x*b.x*c.y + b.y*b.y*c.y - b.y*c.y*c.y - c.x*c.x*b.y)/o
-    val y = -(a.x*a.x*b.x - c.x*a.x*a.x - a.x*b.x*b.x - a.x*b.y*b.y + a.x*c.y*c.y + c.x*c.x*a.x + a.y*a.y*b.x - c.x*a.y*a.y + c.x*b.x*b.x - b.x*c.y*c.y - c.x*c.x*b.x + c.x*b.y*b.y)/o
+    val asq = a.x*a.x + a.y*a.y
+    val bsq = b.x*b.x + b.y*b.y
+    val csq = c.x*c.x + c.y*c.y
+    val x = (asq*(b.y - c.y) + bsq*(c.y - a.y) + csq*(a.y - b.y))/o
+    val y = (asq*(c.x - b.x) + bsq*(a.x - c.x) + csq*(b.x - a.x))/o
     val p = Point(x,y)
     return Circle(p, a.distance(p))
 }
