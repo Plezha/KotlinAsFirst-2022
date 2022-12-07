@@ -259,7 +259,7 @@ class Tests {
         val result = minContainingCircle(p1, p2, p3, p4, p5, p6)
         assertEquals(4.0, result.radius, 0.03)
         for (p in listOf(p1, p2, p3, p4, p5, p6)) {
-            println(p)
+            println("$p $result")
             assertTrue(result.contains(p))
         }
         // Набор точек для примера
