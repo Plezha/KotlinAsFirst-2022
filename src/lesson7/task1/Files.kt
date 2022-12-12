@@ -143,17 +143,10 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
-fun alignFileByWidth(inputName: String, outputName: String) {
-    val list = File(inputName).readLines().map { it.trim().split(Regex("""\s+""")) }
-    val writer = File(outputName).bufferedWriter()
-    val k = list.maxOfOrNull { it.joinToString(" ").length }
-    for (words in list) {
-        val d = k!! - words.joinToString("").length
-        var r = if (words.lastIndex != 0) d % words.lastIndex else 0
-        for (j in 0.. words.lastIndex) writer.write(if (j==words.lastIndex) words[j] else words[j] + " ".repeat(d / words.lastIndex + if (r-- > 0) 1 else 0))
-        writer.newLine()
-    }
-    writer.close()
+fun alignFileByWidth(inputName: String, outputName: String) { // Не рекомендуется к чтению
+    val list = File(inputName).readLines().map { (it.trim() + '\n').split(Regex(""" +""")) }
+    File(outputName).bufferedWriter().use {for (words in list) for (j in 0.. words.lastIndex) it.write(if (j==words.lastIndex) words[j] else words[j] + " ".repeat((list.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) / words.lastIndex + if (j < (list.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) % words.lastIndex) 1 else 0)) }
+
 }
 
 /**
