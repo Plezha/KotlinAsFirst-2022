@@ -88,7 +88,7 @@ data class Circle(val center: Point, val radius: Double) {
      */
     // Мне не нравится, но без eps не всегда работает
     fun contains(p: Point): Boolean = //println("${sqr(center.x - p.x) + sqr(center.y - p.y)} ${radius*radius}")
-        sqr(center.x - p.x) + sqr(center.y - p.y) <= radius*radius + 1e-9
+        sqr(center.x - p.x) + sqr(center.y - p.y) <= radius*radius + 1e-11
 }
 
 /**

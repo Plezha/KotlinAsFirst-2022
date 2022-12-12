@@ -143,11 +143,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
-fun alignFileByWidth(inputName: String, outputName: String) { // Не рекомендуется к чтению
-    val list = File(inputName).readLines().map { (it.trim() + '\n').split(Regex(""" +""")) }
-    File(outputName).bufferedWriter().use {for (words in list) for (j in 0.. words.lastIndex) it.write(if (j==words.lastIndex) words[j] else words[j] + " ".repeat((list.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) / words.lastIndex + if (j < (list.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) % words.lastIndex) 1 else 0)) }
-
-}
+fun alignFileByWidth(inputName: String, outputName: String) = File(outputName).bufferedWriter().use {for (words in File(inputName).readLines().map { (it.trim() + '\n').split(Regex(" +")) }) for (j in 0.. words.lastIndex) it.write(if (j==words.lastIndex) words[j] else words[j] + " ".repeat((File(inputName).readLines().map { (it.trim() + '\n').split(Regex(""" +""")) }.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) / words.lastIndex + if (j < (File(inputName).readLines().map { (it.trim() + '\n').split(Regex(""" +""")) }.maxOfOrNull { it.joinToString(" ").length }!! - words.joinToString("").length) % words.lastIndex) 1 else 0)) } // Я это распечатал и поставил в рамочку.
 
 /**
  * Средняя (14 баллов)
