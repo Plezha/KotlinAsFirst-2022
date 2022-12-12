@@ -232,18 +232,23 @@ fun minContainingCircle(vararg points: Point): Circle { // O(n^3) в худше�
         val a = points[i]
         if (!ansCircle.contains(a)) {
             ansCircle = circleByTwoPoints(points[0], a)
+            println("By two: ${points[0]}, $a")
             for (j in 1..i-1) {
                 val b = points[j]
                 if (!ansCircle.contains(b)) {
                     ansCircle = circleByTwoPoints(a, b)
+                    println("By two: $a, $b")
                     for (k in 0..j-1) {
                         val c = points[k]
-                        if (!ansCircle.contains(c)) ansCircle = circleByThreePoints(a, b, c)
+                        if (!ansCircle.contains(c)) {
+                            ansCircle = circleByThreePoints(a, b, c)
+                            println("By three: $a, $b, $c")
+                        }
                     }
                 }
             }
         }
     }
+    println(ansCircle)
     return ansCircle
 }
-

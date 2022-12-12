@@ -258,8 +258,9 @@ class Tests {
         println(circleByThreePoints(p1,p2,p3).contains(p4))
         val result = minContainingCircle(p1, p2, p3, p4, p5, p6)
         assertEquals(4.0, result.radius, 0.03)
+        println(result) // Point(x=3.0, y=-1.0), Point(x=-3.0, y=-2.0), Point(x=0.0, y=5.0)
         for (p in listOf(p1, p2, p3, p4, p5, p6)) {
-            println("$p $result")
+
             assertTrue(result.contains(p))
         }
         // Набор точек для примера
@@ -269,6 +270,7 @@ class Tests {
         val c = Point(1.96, -1.6)
         val d = Point(0.0, -2.4)
         val result2 = minContainingCircle(a, b, c, d)
+        println(result) // Point(x=1.96, y=-1.6), Point(x=0.0, y=3.0), Point(x=-3.0, y=-1.0)
         assertEquals(2.89, result2.radius, 0.01)
         for (p in listOf(a, b, c, d)) {
             assertTrue(result2.contains(p))

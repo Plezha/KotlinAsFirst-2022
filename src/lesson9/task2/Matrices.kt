@@ -398,23 +398,23 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
 
     ease()
-    //println("Eased:\n$matrix")
+    println("Eased:\n$matrix ${ans.size}")
     solve2x4(0..1,
         listOf(1,2,3,4,
             5,6,7,0),
         listOf(1,2,3,4,
             5,7,6,0),
     )
-    //println("Upper half solved:\n$matrix")
+    println("Upper half solved:\n$matrix ${ans.size}\"")
     if (matrix[1,1] == 7) for (i in listOf(11,10,6,5,9,13,14,10,6,5,9,10,6,5,9,10,14,13,9,10,6,5,9)) aMove(i)
-    //println("Upper half actually solved:\n$matrix")
+    println("Upper half actually solved:\n$matrix ${ans.size}")
     solve2x4(2..3,
         listOf(9,10,11,12,
             13,14,15,0),
         listOf(9,10,11,12,
             13,15,14,0),
     )
-    //println("Lower half solved:\n$matrix")
+    println("Lower half solved:\n$matrix ${ans.size}")
     println(ans.size)
     return ans
 }
