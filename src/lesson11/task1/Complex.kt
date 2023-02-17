@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
-
 package lesson11.task1
 
 import java.lang.IllegalArgumentException
@@ -8,7 +6,7 @@ import java.lang.IllegalArgumentException
  * Фабричный метод для создания комплексного числа из строки вида x+yi
  */
 fun Complex(s: String): Complex {
-    if (!s.matches(Regex("""(-?\d+)* *((\+|\-) *\d+i)*""")) &&
+    if (!s.matches(Regex("""(-?\d+)* *([+|-] *\d+i)*""")) &&
         !s.matches(Regex("""\d+i"""))
     ) {
         throw IllegalArgumentException("") // TODO: add exception
